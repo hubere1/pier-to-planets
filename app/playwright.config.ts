@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
   // CI rendert WebGL per Software (SwiftShader, 2 Kerne): nacheinander und mit mehr Zeit.
-  workers: process.env['CI'] ? 1 : undefined,
+  ...(process.env['CI'] ? { workers: 1 } : {}),
   timeout: process.env['CI'] ? 90_000 : 30_000,
   forbidOnly: !!process.env['CI'],
   reporter: process.env['CI'] ? 'github' : 'list',
