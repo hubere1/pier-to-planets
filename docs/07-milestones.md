@@ -17,12 +17,12 @@ Nachweis: CI-Lauf, Terminal-Ausgabe. **M0 abgeschlossen 04.10.2026** (verify lok
 
 ## M1 – Stilprobe + Geräte-Durchstich
 Ziel: Look festlegen, bevor viel Grafik entsteht; Technik auf echtem Handy belegen.
-- [ ] Spiel-Pixel-Bühne 360 × 640–800, ganzzahlige Skalierung + Sharp-Bilinear-Rest (`06` §2), Pixel-Test auf 720/1080/1440.
-- [ ] Hafenszene: 6 Parallax-Ebenen, Wasser mit Spiegelung, 3 Gebäude (Steg, Lagerhalle in 3 Ausbaustufen, Leuchtturm), Fischerboot + Containerschiff, 4 Arbeiter, Möwen, Rauch.
-- [ ] Generator-Pipeline: Albedo/Normal/Emissive aus Geometrie, Palette Hafen (48), Atlas, Manifest.
-- [ ] Licht-Pass (quantisiert + Dither), 8 Tageszeit-LUTs, Emissive-Nacht, Sonnen-Schatten, Bloom.
-- [ ] Debug-Regler: Tageszeit, Qualitätsstufe, Licht an/aus.
-- [ ] Capacitor-Android-Hülle, Debug-APK aufs Owner-Handy; Frame-Timing über Chrome Remote Debugging.
+- [x] Spiel-Pixel-Bühne 360 × 640–800, ganzzahlige Skalierung + Sharp-Bilinear-Rest (`06` §2), Pixel-Test auf 720/1080/1440.
+- [~] Hafenszene (offen: Parallax-Kamera, siehe `STAND.md`): 6 Parallax-Ebenen, Wasser mit Spiegelung, 3 Gebäude (Steg, Lagerhalle in 3 Ausbaustufen, Leuchtturm), Fischerboot + Containerschiff, 4 Arbeiter, Möwen, Rauch.
+- [x] Generator-Pipeline: Albedo/Normal/Emissive aus Geometrie, Palette Hafen (48), Atlas, Manifest.
+- [x] Licht-Pass (quantisiert + Dither), 8 Tageszeit-LUTs, Emissive-Nacht, Sonnen-Schatten, Bloom.
+- [x] Debug-Regler: Tageszeit, Qualitätsstufe, Licht an/aus.
+- [~] Capacitor-Android-Hülle, Debug-APK (läuft im Emulator, D-027; Messung auf Gerät offen); Frame-Timing über Chrome Remote Debugging.
 - [ ] Referenztafel (Sea of Stars, Graveyard Keeper, Eastward) neben Screenshots der Probe.
 Exit: Owner-Freigabe des Looks; 60 fps (p95 ≤ 20 ms) auf Mittelklasse, ≥ 30 fps auf Low-End in Stufe „Sparsam“; Szene pixelgenau auf 3 Breiten.
 Nachweis: Screenshots Tag/Goldene Stunde/Nacht, Messprotokoll, Freigabe im Decision-Log.
