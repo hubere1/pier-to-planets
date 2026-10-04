@@ -10,6 +10,14 @@ const config: CapacitorConfig = {
     webContentsDebuggingEnabled: undefined,
     backgroundColor: '#14161C',
   },
+  plugins: {
+    // Randlos ab Android 15: Szene zeichnet hinter die Systemleisten, helle Symbole,
+    // Abstände über CSS-Variablen --safe-area-inset-* (docs/05 Layout-Zonen).
+    SystemBars: {
+      insetsHandling: 'css',
+      style: 'DARK',
+    },
+  },
 };
 
 export default config;

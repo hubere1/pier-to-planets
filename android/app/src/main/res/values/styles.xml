@@ -13,6 +13,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- Dunkler Grund hinter den randlosen Systemleisten (Android 15+), passt zu style DARK -->
+        <item name="android:windowBackground">@color/ptp_bg</item>
     </style>
 
 

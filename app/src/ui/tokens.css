@@ -49,7 +49,7 @@ body,
 /* Debug-Regler (Stilprobe M1) */
 .dbg {
   position: absolute;
-  top: max(8px, env(safe-area-inset-top));
+  top: max(8px, var(--safe-area-inset-top, env(safe-area-inset-top, 0px)));
   right: 8px;
   display: flex;
   flex-direction: column;
