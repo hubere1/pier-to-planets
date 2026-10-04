@@ -8,6 +8,10 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4173',
     trace: 'retain-on-failure',
+    // WebGL im Headless-Chrome über SwiftShader (CI ohne GPU).
+    launchOptions: {
+      args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+    },
   },
   projects: [
     // Referenzgerät Hochformat (D-002): 360 × 640 CSS-px, DPR 3 = 1080 px Breite.

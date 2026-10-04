@@ -1,6 +1,25 @@
 {
   "app.title": "Pier to Planets",
   "app.subtitle": "Vom Hafen ins All",
-  "app.status.foundation": "Fundament steht – die Szene folgt in M1.",
-  "app.version": "Version {version}"
+  "app.version": "Version {version}",
+  "debug.toggle": "Debug",
+  "debug.title": "Stilprobe – Regler",
+  "debug.time": "Tageszeit: {time} Uhr",
+  "debug.speed": "Tempo",
+  "debug.speed.pause": "Pause",
+  "debug.speed.real": "Echtzeit",
+  "debug.speed.fast": "1 h/s",
+  "debug.quality": "Qualität",
+  "debug.quality.high": "Hoch",
+  "debug.quality.medium": "Mittel",
+  "debug.quality.low": "Sparsam",
+  "debug.lighting": "Licht",
+  "debug.on": "An",
+  "debug.off": "Aus",
+  "debug.stage": "Lagerhalle",
+  "debug.stage.value": "Stufe {n}",
+  "debug.stats": "{fps} fps · p95 {p95} ms · CPU {cpu} ms",
+  "debug.layout": "Skalierung ×{scale} · Höhe {gameH} px{sharp}",
+  "debug.sharp": " · Sharp-Bilinear",
+  "scene.label": "Hafen: Lagerhalle, Steg, Leuchtturm, Fischerboot und Containerschiff"
 }

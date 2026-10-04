@@ -27,31 +27,101 @@ body,
   overscroll-behavior: none;
 }
 
-.boot {
-  box-sizing: border-box;
-  min-height: 100%;
-  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+.game {
+  position: fixed;
+  inset: 0;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Debug-Regler (Stilprobe M1) */
+.dbg {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  right: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  align-items: flex-end;
   gap: 8px;
+  max-width: calc(100vw - 16px);
 }
 
-.boot h1 {
-  margin: 0;
+.dbg button {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0 12px;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.dbg button[aria-pressed='true'] {
+  border-color: var(--accent);
   color: var(--accent);
-  font-size: 2rem;
 }
 
-.boot .subtitle,
-.boot .version {
+.dbg-panel {
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  border: 2px solid var(--line);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(320px, calc(100vw - 16px));
+  box-sizing: border-box;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+
+.dbg-time {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+}
+
+.dbg-time input {
+  width: 100%;
+  min-height: 32px;
+  accent-color: var(--accent);
+}
+
+.dbg-choice {
+  border: 0;
   margin: 0;
-  color: var(--text-muted);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
-.boot .status {
-  margin: 16px 0 0;
-  max-width: 28ch;
+.dbg-choice legend {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.dbg-choice button {
+  flex: 1 1 auto;
+}
+
+.dbg-stats {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }

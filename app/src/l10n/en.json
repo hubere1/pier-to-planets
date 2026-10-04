@@ -1,6 +1,25 @@
 {
   "app.title": "Pier to Planets",
   "app.subtitle": "From Harbor to Space",
-  "app.status.foundation": "Foundation is in place – the scene follows in M1.",
-  "app.version": "Version {version}"
+  "app.version": "Version {version}",
+  "debug.toggle": "Debug",
+  "debug.title": "Style probe – controls",
+  "debug.time": "Time of day: {time}",
+  "debug.speed": "Speed",
+  "debug.speed.pause": "Pause",
+  "debug.speed.real": "Real time",
+  "debug.speed.fast": "1 h/s",
+  "debug.quality": "Quality",
+  "debug.quality.high": "High",
+  "debug.quality.medium": "Medium",
+  "debug.quality.low": "Saver",
+  "debug.lighting": "Lighting",
+  "debug.on": "On",
+  "debug.off": "Off",
+  "debug.stage": "Warehouse",
+  "debug.stage.value": "Stage {n}",
+  "debug.stats": "{fps} fps · p95 {p95} ms · CPU {cpu} ms",
+  "debug.layout": "Scale ×{scale} · height {gameH} px{sharp}",
+  "debug.sharp": " · sharp bilinear",
+  "scene.label": "Harbor: warehouse, pier, lighthouse, fishing boat and container ship"
 }
