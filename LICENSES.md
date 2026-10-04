@@ -3,11 +3,11 @@
 Wird bei jeder neuen Abhängigkeit, Schrift oder Grafik ergänzt. In der App unter
 Einstellungen → Lizenzen angezeigt (docs/05).
 
-## Schriften (D-019, D-022)
+## Schriften (D-019, D-022, D-025)
 | Schrift | Autor | Lizenz | Pflicht | Status |
 |---|---|---|---|---|
 | m6x11plus | Daniel Linssen (managore) | frei mit Namensnennung | Namensnennung in Credits | geprüft, noch nicht gebündelt (M3) |
-| m5x7 | Daniel Linssen (managore) | CC0 1.0 | keine (Nennung erwünscht) | noch nicht geprüft (D-022) |
+| Pier Pixel / Pier Pixel Klein | eigenes Werk | proprietär (LICENSE) | – | entsteht in M3 (D-022, D-025) |
 | Atkinson Hyperlegible Next | Braille Institute | SIL OFL 1.1 | Lizenztext mitliefern | noch nicht gebündelt (M3) |
 
 ## Laufzeit-Bibliotheken (im App-Bundle)

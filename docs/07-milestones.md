@@ -6,14 +6,14 @@ Abweichungen vom Owner-Plan (Begründung im Decision-Log): Capacitor-Durchstich 
 ---
 ## M0 – Fundament
 Ziel: sauberes Repo, lauffähiges Grundgerüst, Prüfungen aktiv.
-- [~] Repo `pier-to-planets` (lokal angelegt; privates GitHub-Repo + erster Push durch Owner), `LICENSE` (proprietär), `.gitignore`, `CHANGELOG.md`, `LICENSES.md` (Schriften, Bibliotheken).
+- [x] Repo `pier-to-planets` (privat, GitHub `hubere1/pier-to-planets`), `LICENSE` (proprietär), `.gitignore`, `CHANGELOG.md`, `LICENSES.md` (Schriften, Bibliotheken).
 - [x] npm-Workspaces: `packages/sim`, `packages/content`, `app` (Vite + TS strict + Preact), ESLint, Prettier, Vitest, Playwright.
 - [x] `tools/check-purity.ts`, `check-l10n.ts`, `check-palette.ts`, `tools/verify.ps1`.
-- [~] CI (GitHub Actions, Free-Kontingent geprüft D-020; Workflow liegt, erster Lauf nach Push): lint, typecheck, test, purity, l10n, palette.
-- [~] Verifiziert + im Decision-Log (D-020–D-022; offen: Glyphen m5x7): aktuelle Versionen PixiJS v8, Capacitor 8, `@capacitor-community/admob`, break_infinity.js, Preact; Android-Mindest-API und Play-Target-API; Glyphen ÄÖÜß€ in m6x11/m5x7.
+- [x] CI (GitHub Actions, Free-Kontingent geprüft D-020; erster Lauf grün: Run 37226856805): lint, typecheck, test, purity, l10n, palette.
+- [x] Verifiziert + im Decision-Log (D-020–D-022, D-025): aktuelle Versionen PixiJS v8, Capacitor 8, `@capacitor-community/admob`, break_infinity.js, Preact; Android-Mindest-API und Play-Target-API; Glyphen ÄÖÜß€ in m6x11/m5x7.
 - [x] applicationId festlegen (Vorschlag `app.piertoplanets.game`, D-011, D-023) – nach erstem Play-Upload nicht mehr änderbar.
 Exit: `npm run verify` grün lokal und in CI, leere App startet im Browser.
-Nachweis: CI-Lauf, Terminal-Ausgabe.
+Nachweis: CI-Lauf, Terminal-Ausgabe. **M0 abgeschlossen 04.10.2026** (verify lokal 9/9 grün, CI Run 37226856805 grün).
 
 ## M1 – Stilprobe + Geräte-Durchstich
 Ziel: Look festlegen, bevor viel Grafik entsteht; Technik auf echtem Handy belegen.

@@ -91,10 +91,10 @@ Recherche-Befund: Normal-Maps in voller Auflösung lassen Pixel-Art „glatt und
 ### Schriften (alle gebündelt, offline, freie Lizenz)
 | Rolle | Schrift | Lizenz | Einsatz |
 |---|---|---|---|
-| Pixel-Anzeige | **m6x11** (Daniel Linssen) | frei mit Namensnennung | HUD-Zahlen, Titel, Knöpfe, Szenen-Zahlen („+42“) |
-| Pixel-Klein | **m5x7** (Daniel Linssen) | CC0 | Schilder in der Szene, kleine Badges |
+| Pixel-Anzeige | **m6x11plus** (Daniel Linssen, D-022) | frei mit Namensnennung | HUD-Zahlen, Titel, Knöpfe, Szenen-Zahlen („+42“) |
+| Pixel-Klein | **Pier Pixel Klein** (eigene Schrift, 5 × 7-Raster, D-025) | proprietär (eigenes Werk) | Schilder in der Szene, kleine Badges |
 | Fließtext | **Atkinson Hyperlegible Next** | SIL OFL 1.1 | Beschreibungen, Dialoge, Tutorial, Einstellungen |
-- M0-Prüfung: Glyphen für `ÄÖÜäöüß€` und geschütztes Leerzeichen in m6x11/m5x7. Fehlen sie, ergänzen wir sie selbst als abgeleitete Schrift „Pier Pixel“ (eigene Glyphen, Lizenz in `LICENSES.md`), im selben Raster.
+- M0-Prüfung (erledigt, D-022): Glyphen für `ÄÖÜäöüß€` und geschütztes Leerzeichen in m6x11plus. Fehlen sie, ergänzen wir sie selbst als abgeleitete Schrift „Pier Pixel“ (eigene Glyphen, Lizenz in `LICENSES.md`), im selben Raster.
 - Pixel-Schriften erscheinen **nur in ganzzahligen Vielfachen ihres Rasters** in Gerätepixeln: Schriftgröße = `11 · k · s / DPR` CSS-px (m6x11), `k` ∈ {1, 2}. Damit bleibt jeder Schrift-Pixel exakt auf dem Spiel-Pixel-Raster.
 - In der Szene (PixiJS) als BitmapFont aus denselben Glyphen, gezeichnet in der Spiel-Pixel-Bühne.
 ### Typo-Skala (Ausgangswerte bei s = 3)
@@ -103,7 +103,7 @@ Recherche-Befund: Normal-Maps in voller Auflösung lassen Pixel-Art „glatt und
 | `display` | m6x11 ×2 | 22 Spiel-Pixel Zeilenhöhe | Feier-Titel, Ära-Name |
 | `hudNumber` | m6x11 ×1 | 11 + 3 Abstand | Geld, Einnahmen/s |
 | `button` | m6x11 ×1 | 11 | Kaufknöpfe, Tabs |
-| `label` | m5x7 ×1 | 7 + 2 | Badges, Stufen |
+| `label` | Pier Pixel Klein ×1 | 7 + 2 | Badges, Stufen |
 | `body` | Atkinson Next 16 px / 1,4 | CSS-px | Beschreibungen |
 | `bodySmall` | Atkinson Next 14 px / 1,4 | CSS-px | Hilfstexte |
 ### Skalierung bis 200 %
@@ -130,4 +130,4 @@ Recherche-Befund: Normal-Maps in voller Auflösung lassen Pixel-Art „glatt und
 - pixi-lights (nicht v8): <https://www.npmjs.com/package/pixi-lights>
 - Texturgrößen Android WebGL2: <https://web3dsurvey.com/webgl2/parameters/MAX_TEXTURE_SIZE>
 - Aseprite-CLI: <https://www.aseprite.org/cli/>
-- Schriften: <https://managore.itch.io/m6x11>, <https://managore.itch.io/m5x7>, <https://github.com/googlefonts/atkinson-hyperlegible>
+- Schriften: <https://managore.itch.io/m6x11>, <https://github.com/googlefonts/atkinson-hyperlegible>
