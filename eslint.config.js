@@ -20,6 +20,8 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // noUncheckedIndexedAccess ist aktiv; in Pixel-Schleifen sind Indizes per Konstruktion gültig.
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
   {

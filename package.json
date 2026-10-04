@@ -15,16 +15,17 @@
   "scripts": {
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p tools/tsconfig.json",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p tools/tsconfig.json && tsc -p art/tsconfig.json",
     "test": "npm test --workspaces --if-present",
     "check:purity": "tsx tools/check-purity.ts",
     "check:l10n": "tsx tools/check-l10n.ts",
     "check:palette": "tsx tools/check-palette.ts",
-    "test:tools": "vitest run --root tools",
+    "test:tools": "vitest run -c vitest.tools.config.ts",
     "build": "npm run build -w app",
     "dev": "npm run dev -w app",
     "verify": "tsx tools/verify.ts",
-    "android:sync": "npm run build && cap sync android"
+    "android:sync": "npm run build && cap sync android",
+    "art": "tsx tools/gen-luts.ts && tsx tools/build-atlas.ts"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.2",

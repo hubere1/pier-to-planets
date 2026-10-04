@@ -7,3 +7,5 @@ package-lock.json
 android
 docs
 *.md
+art/manifest.json
+art/build
