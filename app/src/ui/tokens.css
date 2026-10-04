@@ -1,0 +1,57 @@
+/* Design-Tokens: docs/05-ui-ux-spec.md § Design-Tokens. Farben nur über Variablen. */
+:root {
+  --bg: #14161c;
+  --panel: #1d2129;
+  --panel-high: #272c37;
+  --line: #3a4150;
+  --text: #f3eee2;
+  --text-muted: #a9abb6;
+  --positive: #7bd86f;
+  --risk: #ff6b6b;
+  --warning: #ffb13d;
+  --star: #ffd95a;
+  --crystal: #7fe3f0;
+  --accent: #f2b544;
+  color-scheme: dark;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+.boot {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.boot h1 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 2rem;
+}
+
+.boot .subtitle,
+.boot .version {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.boot .status {
+  margin: 16px 0 0;
+  max-width: 28ch;
+}
