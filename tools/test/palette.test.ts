@@ -10,20 +10,20 @@ const img = (w: number, h: number, rgba: number[][]) => ({
 describe('validatePalette (NFR-G06)', () => {
   it('akzeptiert bis 48 eindeutige Hex-Farben', () => {
     const colors = Array.from({ length: 48 }, (_, i) => `#${i.toString(16).padStart(6, '0')}`);
-    expect(validatePalette({ era: 'harbor', colors })).toEqual([]);
+    expect(validatePalette({ era: 'harbor', ramps: { a: colors } })).toEqual([]);
   });
   it('lehnt mehr als 48 Farben, Duplikate und Unsinn ab', () => {
     const colors = Array.from({ length: 49 }, (_, i) => `#${i.toString(16).padStart(6, '0')}`);
-    expect(validatePalette({ era: 'harbor', colors })).toContain('too-many-colors');
-    expect(validatePalette({ era: 'h', colors: ['#000000', '#000000'] })).toContain(
+    expect(validatePalette({ era: 'harbor', ramps: { a: colors } })).toContain('too-many-colors');
+    expect(validatePalette({ era: 'h', ramps: { a: ['#000000'], b: ['#000000'] } })).toContain(
       'duplicate-color',
     );
-    expect(validatePalette({ era: 'h', colors: ['red'] })).toContain('invalid-color');
+    expect(validatePalette({ era: 'h', ramps: { a: ['red'] } })).toContain('invalid-color');
   });
 });
 
 describe('checkAlbedo', () => {
-  const palette = { era: 'harbor', colors: ['#112233', '#ffffff'] };
+  const palette = { era: 'harbor', ramps: { a: ['#112233', '#ffffff'] } };
   it('akzeptiert Palettenfarben und volle Transparenz', () => {
     const r = checkAlbedo(
       img(2, 1, [

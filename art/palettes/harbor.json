@@ -1,0 +1,20 @@
+{
+  "era": "harbor",
+  "note": "Hafen: warm (Messing, Teer, Seeblau, Rostrot). Rampen dunkel → hell, Schatten kühler, Lichter wärmer (docs/06 §3, §7). Max. 48 Farben.",
+  "ramps": {
+    "sea": ["#0f1a2e", "#1b2e4a", "#284866", "#3a6787", "#5a8fae", "#8bbcd1"],
+    "teal": ["#1d4a54", "#3a7f7c"],
+    "wood": ["#2b1a14", "#4a2c1d", "#6e4428", "#946036", "#b98450", "#d9aa72"],
+    "tar": ["#141318", "#24232b", "#38363f"],
+    "stone": ["#4a4d58", "#666a75", "#868a93", "#a8abb0", "#cbccc9"],
+    "brick": ["#4a1f1f", "#74302a", "#a04536", "#c8623f"],
+    "brass": ["#7a5520", "#b5832c", "#e0b14a", "#f5d77e"],
+    "leaf": ["#1f3a2a", "#2f5a35", "#4f7d3c", "#7ea24f"],
+    "sand": ["#8f7a5c", "#b8a079", "#ddc9a0"],
+    "cream": ["#efe6d0", "#fbf6ea"],
+    "cblue": ["#2a4f8c", "#3f74b8"],
+    "cgreen": ["#2f6b4f", "#4a8f63"],
+    "corange": ["#b8602a", "#e08a3c"],
+    "haze": ["#6d7f9c", "#8fa0b8", "#b3c0d0"]
+  }
+}

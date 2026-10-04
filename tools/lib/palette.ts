@@ -4,10 +4,13 @@
 export const MAX_PALETTE_COLORS = 48;
 export const MAX_ATLAS_SIZE = 2048;
 
+/** Palette als benannte Rampen (dunkel → hell), z. B. `wood: [...]` (docs/06 §7). */
 export interface Palette {
   era: string;
-  colors: string[];
+  ramps: Record<string, string[]>;
 }
+
+export const paletteColors = (p: Palette): string[] => Object.values(p.ramps).flat();
 
 export interface RgbaImage {
   width: number;
@@ -46,9 +49,10 @@ const toHex = (k: number) => `#${k.toString(16).padStart(6, '0')}`;
 export function validatePalette(p: Palette): string[] {
   const problems: string[] = [];
   if (!p.era) problems.push('missing-era');
-  if (p.colors.length > MAX_PALETTE_COLORS) problems.push('too-many-colors');
-  if (p.colors.some((c) => !HEX.test(c))) problems.push('invalid-color');
-  if (new Set(p.colors.map((c) => c.toLowerCase())).size !== p.colors.length) {
+  const colors = paletteColors(p);
+  if (colors.length > MAX_PALETTE_COLORS) problems.push('too-many-colors');
+  if (colors.some((c) => !HEX.test(c))) problems.push('invalid-color');
+  if (new Set(colors.map((c) => c.toLowerCase())).size !== colors.length) {
     problems.push('duplicate-color');
   }
   return problems;
@@ -78,7 +82,7 @@ function scan(
 }
 
 export function checkAlbedo(img: RgbaImage, palette: Palette, limit = 20): ImageProblem[] {
-  const allowed = new Set(palette.colors.map((c) => parseInt(c.slice(1), 16)));
+  const allowed = new Set(paletteColors(palette).map((c) => parseInt(c.slice(1), 16)));
   return scan(img, allowed, 'off-palette', limit);
 }
 

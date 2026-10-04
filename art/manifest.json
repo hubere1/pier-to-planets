@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "atlases": {
+    "harbor": {
+      "width": 512,
+      "height": 327,
+      "maps": {
+        "albedo": "build/harbor/atlas.albedo.png",
+        "normal": "build/harbor/atlas.normal.png",
+        "emissive": "build/harbor/atlas.emissive.png"
+      },
+      "luts": {
+        "file": "build/harbor/luts.png",
+        "size": 16,
+        "order": [
+          "dawn",
+          "sunrise",
+          "morning",
+          "noon",
+          "afternoon",
+          "golden",
+          "blue",
+          "night"
+        ]
+      }
+    }
+  },
+  "sprites": {
+    "harbor.hills": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        64
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              1,
+              152,
+              360,
+              64
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.city": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        46
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              361,
+              217,
+              150,
+              46
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.cloudA": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        22
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              257,
+              274,
+              70,
+              22
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.cloudB": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        16
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              355,
+              274,
+              46,
+              16
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.cliff": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        150
+      ],
+      "reflect": true,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              1,
+              1,
+              150,
+              150
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.lighthouse": {
+      "atlas": "harbor",
+      "anchor": [
+        16,
+        100
+      ],
+      "reflect": false,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              455,
+              1,
+              32,
+              100
+            ]
+          ],
+          "points": {
+            "lamp": [
+              16,
+              18
+            ]
+          }
+        }
+      ]
+    },
+    "harbor.quay": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        46
+      ],
+      "reflect": true,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              154,
+              217,
+              206,
+              46
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.warehouse": {
+      "atlas": "harbor",
+      "anchor": [
+        50,
+        120
+      ],
+      "reflect": false,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              152,
+              1,
+              100,
+              120
+            ]
+          ],
+          "points": {
+            "chimney": [
+              71,
+              65
+            ],
+            "window": [
+              25,
+              94
+            ]
+          }
+        },
+        {
+          "frames": [
+            [
+              253,
+              1,
+              100,
+              120
+            ]
+          ],
+          "points": {
+            "chimney": [
+              71,
+              37
+            ],
+            "window": [
+              25,
+              94
+            ]
+          }
+        },
+        {
+          "frames": [
+            [
+              354,
+              1,
+              100,
+              120
+            ]
+          ],
+          "points": {
+            "chimney": [
+              71,
+              37
+            ],
+            "lampL": [
+              33,
+              94
+            ],
+            "lampR": [
+              67,
+              94
+            ],
+            "window": [
+              25,
+              94
+            ]
+          }
+        }
+      ]
+    },
+    "harbor.pier": {
+      "atlas": "harbor",
+      "anchor": [
+        0,
+        44
+      ],
+      "reflect": true,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              1,
+              274,
+              186,
+              44
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.fishingBoat": {
+      "atlas": "harbor",
+      "anchor": [
+        28,
+        34
+      ],
+      "reflect": true,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              188,
+              274,
+              58,
+              34
+            ]
+          ],
+          "points": {
+            "mast": [
+              36,
+              0
+            ],
+            "navRed": [
+              11,
+              5
+            ],
+            "navGreen": [
+              27,
+              5
+            ]
+          }
+        }
+      ]
+    },
+    "harbor.containerShip": {
+      "atlas": "harbor",
+      "anchor": [
+        76,
+        56
+      ],
+      "reflect": true,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              1,
+              217,
+              152,
+              56
+            ]
+          ],
+          "points": {
+            "funnel": [
+              16,
+              0
+            ],
+            "bowLight": [
+              143,
+              21
+            ],
+            "navRed": [
+              2,
+              14
+            ],
+            "navGreen": [
+              30,
+              14
+            ]
+          }
+        }
+      ]
+    },
+    "harbor.worker": {
+      "atlas": "harbor",
+      "anchor": [
+        5,
+        15
+      ],
+      "reflect": false,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              402,
+              274,
+              10,
+              15
+            ],
+            [
+              413,
+              274,
+              10,
+              15
+            ],
+            [
+              424,
+              274,
+              10,
+              15
+            ],
+            [
+              435,
+              274,
+              10,
+              15
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.gull": {
+      "atlas": "harbor",
+      "anchor": [
+        6,
+        4
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              490,
+              274,
+              13,
+              7
+            ],
+            [
+              1,
+              319,
+              13,
+              7
+            ],
+            [
+              15,
+              319,
+              13,
+              7
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.smoke": {
+      "atlas": "harbor",
+      "anchor": [
+        5,
+        5
+      ],
+      "reflect": false,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              446,
+              274,
+              10,
+              10
+            ],
+            [
+              457,
+              274,
+              10,
+              10
+            ],
+            [
+              468,
+              274,
+              10,
+              10
+            ],
+            [
+              479,
+              274,
+              10,
+              10
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.lampPost": {
+      "atlas": "harbor",
+      "anchor": [
+        4,
+        32
+      ],
+      "reflect": false,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              247,
+              274,
+              9,
+              32
+            ]
+          ],
+          "points": {
+            "lamp": [
+              4,
+              4
+            ]
+          }
+        }
+      ]
+    },
+    "harbor.crates": {
+      "atlas": "harbor",
+      "anchor": [
+        13,
+        18
+      ],
+      "reflect": false,
+      "shadow": true,
+      "stages": [
+        {
+          "frames": [
+            [
+              328,
+              274,
+              26,
+              18
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    },
+    "harbor.pile": {
+      "atlas": "harbor",
+      "anchor": [
+        6,
+        96
+      ],
+      "reflect": true,
+      "shadow": false,
+      "stages": [
+        {
+          "frames": [
+            [
+              488,
+              1,
+              12,
+              96
+            ]
+          ],
+          "points": {}
+        }
+      ]
+    }
+  }
+}
