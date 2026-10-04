@@ -1,0 +1,23 @@
+node_modules/
+dist/
+coverage/
+*.log
+.vite/
+test-results/
+playwright-report/
+blob-report/
+.env
+.env.*
+# Android-Secrets (nie ins Repo, Regel 9/M9)
+key.properties
+*.jks
+*.keystore
+android/app/release/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/captures/
+.DS_Store
+Thumbs.db

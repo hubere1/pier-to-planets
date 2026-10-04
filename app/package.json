@@ -1,0 +1,27 @@
+{
+  "name": "@ptp/app",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --strictPort --port 4173",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run && playwright test",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@ptp/content": "*",
+    "@ptp/sim": "*",
+    "@preact/signals": "^2.11.3",
+    "preact": "^11.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@preact/preset-vite": "^2.10.6",
+    "vite": "^8.3.2"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "pier-to-planets",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "packages/sim",
+    "packages/content",
+    "app"
+  ],
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p tools/tsconfig.json",
+    "test": "npm test --workspaces --if-present",
+    "check:purity": "tsx tools/check-purity.ts",
+    "check:l10n": "tsx tools/check-l10n.ts",
+    "check:palette": "tsx tools/check-palette.ts",
+    "test:tools": "vitest run --root tools",
+    "build": "npm run build -w app",
+    "dev": "npm run dev -w app",
+    "verify": "tsx tools/verify.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.18.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "pngjs": "^7.0.0",
+    "@types/pngjs": "^6.0.5",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
+  }
+}
