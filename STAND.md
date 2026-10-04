@@ -4,7 +4,7 @@ Zuletzt aktualisiert: 04.10.2026 (Ende der Sitzung). Diese Datei sagt dem nächs
 wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 
 ## Kurzfassung
-- **M0 Fundament:** abgeschlossen, CI grün.
+- **M0 Fundament:** abgeschlossen. **CI grün** auf Stand `1c3183c` (Run 37231141981, inkl. Pixeltests per Software-WebGL).
 - **M1 Stilprobe + Geräte-Durchstich:** großteils umgesetzt, **Abnahme offen**.
   Die Hafenszene läuft im Browser und im Android-Emulator, mit Licht, Tag-Nacht-Wechsel, Wasser und Spiegelungen.
 - Nächster Meilenstein nach M1-Abnahme: **M2 Simulationskern** (TDD, `docs/07-milestones.md`).
@@ -44,4 +44,4 @@ npm run art                      # Grafik + Manifest neu bauen
 npm run android:sync             # Web-Build in die Android-Hülle kopieren
 cd android && gradlew.bat assembleDebug   # Debug-APK (JDK 21 nötig, D-026)
 ```
-Emulator: `%LOCALAPPDATA%\Android\Sdk\emulator\emulator.exe -avd ptp_api36`, adb immer mit `-s emulator-5554`.
+Emulator (aktuell beendet, bei Bedarf neu starten): `%LOCALAPPDATA%\Android\Sdk\emulator\emulator.exe -avd ptp_api36`, adb immer mit `-s emulator-5554`.
