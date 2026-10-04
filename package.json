@@ -23,20 +23,27 @@
     "test:tools": "vitest run --root tools",
     "build": "npm run build -w app",
     "dev": "npm run dev -w app",
-    "verify": "tsx tools/verify.ts"
+    "verify": "tsx tools/verify.ts",
+    "android:sync": "npm run build && cap sync android"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.18.0",
+    "@types/pngjs": "^6.0.5",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.13.0",
     "pngjs": "^7.0.0",
-    "@types/pngjs": "^6.0.5",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.0",
     "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.2"
   }
 }

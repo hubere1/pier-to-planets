@@ -14,9 +14,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@preact/signals": "^2.11.3",
     "@ptp/content": "*",
     "@ptp/sim": "*",
-    "@preact/signals": "^2.11.3",
     "preact": "^11.0.0"
   },
   "devDependencies": {
