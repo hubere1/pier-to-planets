@@ -95,15 +95,15 @@ Recherche-Befund: Normal-Maps in voller Auflösung lassen Pixel-Art „glatt und
 | Pixel-Klein | **Pier Pixel Klein** (eigene Schrift, 5 × 7-Raster, D-025) | proprietär (eigenes Werk) | Schilder in der Szene, kleine Badges |
 | Fließtext | **Atkinson Hyperlegible Next** | SIL OFL 1.1 | Beschreibungen, Dialoge, Tutorial, Einstellungen |
 - M0-Prüfung (erledigt, D-022): Glyphen für `ÄÖÜäöüß€` und geschütztes Leerzeichen in m6x11plus. Fehlen sie, ergänzen wir sie selbst als abgeleitete Schrift „Pier Pixel“ (eigene Glyphen, Lizenz in `LICENSES.md`), im selben Raster.
-- Pixel-Schriften erscheinen **nur in ganzzahligen Vielfachen ihres Rasters** in Gerätepixeln: Schriftgröße = `11 · k · s / DPR` CSS-px (m6x11), `k` ∈ {1, 2}. Damit bleibt jeder Schrift-Pixel exakt auf dem Spiel-Pixel-Raster.
+- Pixel-Schriften erscheinen **nur in ganzzahligen Vielfachen ihres Rasters** in Gerätepixeln: Schriftgröße = `18 · k · gp` CSS-px für Pier Pixel (m6x11plus: Em 18 Pixel, Glyphen 11 hoch) und `10 · k · gp` für Pier Pixel Klein, `gp` = 1 Spiel-Pixel in CSS-px = `s / DPR`, `k` ∈ {1, 2} (D-041). Damit bleibt jeder Schrift-Pixel exakt auf dem Spiel-Pixel-Raster.
 - In der Szene (PixiJS) als BitmapFont aus denselben Glyphen, gezeichnet in der Spiel-Pixel-Bühne.
 ### Typo-Skala (Ausgangswerte bei s = 3)
 | Stil | Schrift | Größe | Verwendung |
 |---|---|---|---|
-| `display` | m6x11 ×2 | 22 Spiel-Pixel Zeilenhöhe | Feier-Titel, Ära-Name |
-| `hudNumber` | m6x11 ×1 | 11 + 3 Abstand | Geld, Einnahmen/s |
-| `button` | m6x11 ×1 | 11 | Kaufknöpfe, Tabs |
-| `label` | Pier Pixel Klein ×1 | 7 + 2 | Badges, Stufen |
+| `display` | Pier Pixel ×2 | Em 36 Spiel-Pixel | Feier-Titel, Dialog-Titel |
+| `hudNumber` | Pier Pixel ×1 | Em 18 Spiel-Pixel | Geld, Einnahmen/s |
+| `button` | Pier Pixel ×1 | Em 18 | Kaufknöpfe |
+| `label` | Pier Pixel Klein ×1 | Em 10 (7 + Unterlänge) | Tab-Beschriftungen, Badges |
 | `body` | Atkinson Next 16 px / 1,4 | CSS-px | Beschreibungen |
 | `bodySmall` | Atkinson Next 14 px / 1,4 | CSS-px | Hilfstexte |
 ### Skalierung bis 200 %

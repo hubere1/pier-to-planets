@@ -41,13 +41,14 @@ Nachweis: Testausgabe, Balance-Report.
 
 ## M3 – Ära 1 komplett spielbar
 Ziel: Hafen von Start bis Ziel-Gebäude, mit Speichern, Offline und Sternen.
-- [ ] Alle 8 Hafengebäude mit Ausbaustufen (Meilensteine 10/25/50/100/200), alle Fahrzeuge, Arbeiter-Anzahl nach Stufe.
-- [ ] Takt, Interpolation, Lifecycle, Autosave, Rückkehr-Dialog.
-- [ ] UI: HUD, Panel (3 Höhen), Bauen-Tab, Kaufmenge, Engpass-Peek, Prestige-Dialog, Einstellungen (Grundumfang), Tokens, 9-Slice-Rahmen, Schriften.
-- [ ] Tutorial (`03` §8), Feier-Ebene (Kauf, Meilenstein, Ziel-Gebäude).
-- [ ] DE + EN vollständig.
+- [x] Alle 8 Hafengebäude mit Ausbaustufen (Meilensteine 10/25/50/100/200), alle Fahrzeuge, Arbeiter-Anzahl nach Stufe (D-037).
+- [x] Takt, Interpolation, Lifecycle, Autosave, Rückkehr-Dialog.
+- [x] UI: HUD, Panel (3 Höhen), Bauen-Tab, Kaufmenge, Engpass-Peek, Prestige-Dialog, Einstellungen (Grundumfang), Tokens, 9-Slice-Rahmen, Schriften (D-039, D-041, D-042).
+- [x] Tutorial (`03` §8), Feier-Ebene (Kauf, Meilenstein, Ziel-Gebäude) (D-038).
+- [x] DE + EN vollständig.
 Exit: Neuinstallation → erster Kauf ≤ 60 s, Kran ≤ 5 Min; Ziel-Gebäude erreichbar; Save über App-Update erhalten.
 Nachweis: Journey-Test (Playwright), Stoppuhr auf Gerät, UI-Goldens 360 × 640/320 dp/200 %.
+**M3 abgeschlossen 05.10.2026:** erster Kauf (Kran) im Emulator nach 44,3 s, im Journey-Test 45–49 s, im Gate bei allen 100 Installationen 43,8 s (D-040); Ziel-Gebäude im Gate an Tag 2,00 und per UI-Test baubar; Spielstand übersteht App-Update v1 → v2 im Emulator (`docs/m3/geraetelauf.md`); Layout-Prüfungen in 12 Kombinationen grün (D-043).
 
 ## M4 – Ära 2 + Ära-Wechsel
 - [ ] Flughafen: Szene, 8 Gebäude, 3 Fahrzeuge, Wetter-Mechanik (gleitend), Palette, LUTs.
