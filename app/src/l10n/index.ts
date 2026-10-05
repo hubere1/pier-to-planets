@@ -40,7 +40,7 @@ export function duration(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
-  if (h > 0) return t('time.hm', { h, m });
+  if (h > 0) return m > 0 ? t('time.hm', { h, m }) : t('time.h', { h });
   if (m > 0) return t('time.m', { m });
   return t('time.s', { s });
 }

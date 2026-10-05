@@ -5,6 +5,7 @@
  * Fehlerbericht folgen mit M8.
  */
 import { useState } from 'preact/hooks';
+import oflText from '../fonts/OFL-Atkinson.txt?raw';
 import { t } from '../../l10n/index.ts';
 import { Icon } from '../components/Icon.tsx';
 import { settings, updateSettings, type Settings } from '../settings.ts';
@@ -141,6 +142,10 @@ export function SettingsSheet() {
             <div class="licenses" data-testid="licenses">
               <p>{t('licenses.m6x11')}</p>
               <p>{t('licenses.atkinson')}</p>
+              <details>
+                <summary>{t('licenses.ofl')}</summary>
+                <pre>{oflText}</pre>
+              </details>
               <p>{t('licenses.pierPixel')}</p>
               <p>{t('licenses.libs')}</p>
             </div>

@@ -84,7 +84,11 @@ async function writeRaw(text: string): Promise<void> {
 export async function initSettings(opts: { persist: boolean; hasSave: boolean }): Promise<void> {
   // Wer schon spielt (Spielstand ohne Tutorial-Eintrag), bekommt kein Tutorial mehr.
   const defaults: Settings = { ...DEFAULTS, tutorial: opts.hasSave ? 'done' : 'tapBoat' };
-  settings.value = opts.persist ? parseSettings(await readRaw(), defaults) : defaults;
+  const raw = opts.persist ? await readRaw() : null;
+  settings.value = parseSettings(raw, defaults);
+  // Erststart sofort festhalten: sonst gälte beim nächsten Start der dann vorhandene Spielstand
+  // als „spielt schon“ und das Tutorial fiele weg, obwohl es nie begonnen wurde.
+  if (opts.persist && raw === null) await writeRaw(JSON.stringify(settings.value));
   let first = true;
   effect(() => {
     const s = settings.value;

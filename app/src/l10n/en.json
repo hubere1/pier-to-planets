@@ -193,5 +193,6 @@
   "unload.action": "Unload",
   "unload.waiting": "No ship at the pier",
   "save.newerVersion": "This save comes from a newer version. Please update the app – your progress stays untouched.",
-  "toast.stockFull": "Storage full – the warehouse sells as fast as it can."
+  "toast.stockFull": "Storage full – the warehouse sells as fast as it can.",
+  "time.h": "{h} h"
 }
