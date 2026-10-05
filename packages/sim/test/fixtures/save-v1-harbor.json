@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "checksum": "cde3506d4f9926456de1ccc11d106f2db9cffaf77827d2e94391276bd6003e3c",
+  "savedAtWallMs": 1791187200000,
+  "appVersion": "0.1.0-m2",
+  "payload": {
+    "time": 2099.9999999999995,
+    "rng": 2498673512,
+    "nextVehicleId": 66,
+    "activeEra": "harbor",
+    "buyAmount": 1,
+    "eras": {
+      "harbor": {
+        "money": "1.37884671723936e3",
+        "runEarnings": "2.3771e3",
+        "lifetimeEarnings": "2.3771e3",
+        "levels": {
+          "pier": 16,
+          "crane": 1,
+          "warehouse": 11,
+          "fishMarket": 0,
+          "lighthouse": 0,
+          "shipyard": 0,
+          "customs": 0
+        },
+        "unlocked": ["pier", "crane", "warehouse", "fishMarket", "lighthouse"],
+        "starsEarned": 0,
+        "goalBuilt": false,
+        "resets": 0,
+        "vehicles": [
+          {
+            "id": 47,
+            "tier": 0,
+            "load": 96.00000000000001,
+            "cargo": 82.4999999999995,
+            "phase": "docked",
+            "t": 62.60000000000062,
+            "bonusTaps": 10,
+            "turnedAway": false
+          },
+          {
+            "id": 48,
+            "tier": 0,
+            "load": 96.00000000000001,
+            "cargo": 96.00000000000001,
+            "phase": "docked",
+            "t": 56.600000000000534,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 49,
+            "tier": 0,
+            "load": 104,
+            "cargo": 104,
+            "phase": "docked",
+            "t": 50.60000000000045,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 50,
+            "tier": 0,
+            "load": 104,
+            "cargo": 104,
+            "phase": "docked",
+            "t": 8.899999999999984,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 51,
+            "tier": 0,
+            "load": 104,
+            "cargo": 104,
+            "phase": "waiting",
+            "t": 61.3000000000006,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 52,
+            "tier": 0,
+            "load": 112.00000000000001,
+            "cargo": 112.00000000000001,
+            "phase": "waiting",
+            "t": 53.00000000000048,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 54,
+            "tier": 0,
+            "load": 120,
+            "cargo": 120,
+            "phase": "waiting",
+            "t": 44.80000000000037,
+            "bonusTaps": 0,
+            "turnedAway": false
+          },
+          {
+            "id": 64,
+            "tier": 0,
+            "load": 120,
+            "cargo": 120,
+            "phase": "waiting",
+            "t": 7.799999999999988,
+            "bonusTaps": 0,
+            "turnedAway": false
+          }
+        ],
+        "arrivalMass": 0.3225190374793314,
+        "stock": 0,
+        "served": 39.546875
+      }
+    },
+    "boost": { "remaining": 0, "level": 0, "day": 0, "usedToday": 0 },
+    "lastOffline": {
+      "earned": "1.35e3",
+      "byEra": { "harbor": "1.35e3" },
+      "seconds": 1800,
+      "counted": 1800,
+      "doubled": false
+    }
+  }
+}
