@@ -1,6 +1,6 @@
 # Arbeitsstand – hier weitermachen
 
-Zuletzt aktualisiert: 04.10.2026 (Ende der Sitzung). Diese Datei sagt dem nächsten Agenten bzw. Entwickler,
+Zuletzt aktualisiert: 05.10.2026. Diese Datei sagt dem nächsten Agenten bzw. Entwickler,
 wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 
 ## Kurzfassung
@@ -16,23 +16,23 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
   - Austausch einzelner Grafiken: PNGs nach `art/src/<sprite-id>/<stufe>-<bild>.albedo.png` (+ `.normal`/`.emissive`)
 - Renderer `app/src/render/`: Layout (`layout.ts`), Tag-Nacht (`daynight.ts`), Pipeline (`pipeline.ts`),
   Licht-Shader (`lighting/composite.ts`), Szene (`scene/harbor.ts`, `scene/sceneSprite.ts`), Bühne (`stage.ts`)
-- Debug-Regler (Knopf „Debug“): Tageszeit, Tempo, Qualität, Licht an/aus, Ausbaustufe Lagerhalle, fps/p95
-- URL-Parameter für Screenshots: `?hour=12&speed=0&quality=low&stage=0&light=0&debug=1&ui=0`
-- Tests: Pixeltest 720/1080/1440 px (`app/e2e/pixels.spec.ts`), Szene + Debug (DE), Layout- und Tag-Nacht-Unit-Tests
+- Parallax-Kamera (D-029, `render/camera.ts`): Wisch-Schwenk ±40 px mit Auslaufen, Ebenen-Faktoren aus `docs/06` §6
+- Debug-Regler (Knopf „Debug“): Tageszeit, Tempo, Qualität, Licht an/aus, Ausbaustufe Lagerhalle, Kamera, fps/p95
+- URL-Parameter für Screenshots: `?hour=12&speed=0&quality=low&stage=0&cam=-40&light=0&debug=1&ui=0`
+- WebGL-Warnung „no texture bound to the unit n“ im Android-WebView behoben (leere Textur auf freie Einheiten,
+  `stage.ts` + `pipeline.ts`); im Emulator 30 s ohne Warnung geprüft
+- Tests: Pixeltest 720/1080/1440 px (`app/e2e/pixels.spec.ts`), Szene + Debug (DE), Kamera (Wischen, pixelgenau bei
+  −40/−17/40), Layout-, Tag-Nacht- und Kamera-Unit-Tests
 - Android: Capacitor 8, randlos mit dunklen Systemleisten, läuft im Emulator `ptp_api36` (D-027)
 - Screenshots zur Abnahme: `docs/m1/` (Tag, goldene Stunde, Nacht, Emulator)
 
 ## M1 – was offen ist (in dieser Reihenfolge)
 1. **Owner-Freigabe des Looks** anhand `docs/m1/*.png` → Eintrag im Decision-Log.
 2. **Referenztafel** (Sea of Stars, Graveyard Keeper, Eastward) neben den Screenshots – `docs/m1/referenz.md`.
-3. **Parallax-Kamera:** Ebenen existieren (fern, mittel, Spiel, vorne), aber die Kamera steht still. Kameraschwenk mit
-   Parallax-Faktoren aus `docs/06` §6 fehlt.
-4. **fps-Messung auf echtem Gerät** (Exit-Kriterium 60 fps / p95 ≤ 20 ms, Low-End 30 fps): Im Emulator nicht aussagekräftig.
+3. **fps-Messung auf echtem Gerät** (Exit-Kriterium 60 fps / p95 ≤ 20 ms, Low-End 30 fps): Im Emulator nicht aussagekräftig.
    **Vorher den Owner fragen** (D-027: Tests sonst nur im Emulator).
-5. Im Android-WebView meldet WebGL „no texture bound to the unit 1/2/3/16…“ (Warnung, Bild korrekt). Ursache klären
-   (vermutlich Sampler-Bindung in `pipeline.ts` vor dem ersten Render).
-6. Feinschliff: Sonnenschatten kaum sichtbar, Klippen-Textur, viel leerer Himmel (Komposition), Rauch ohne Ausblenden.
-7. Kein WebGL1-Fallback: Der Licht-Shader braucht WebGL2 (GLSL 300 es). Für sehr alte Geräte Stufe „Sparsam“ ohne
+4. Feinschliff: Sonnenschatten kaum sichtbar, Klippen-Textur, viel leerer Himmel (Komposition), Rauch ohne Ausblenden.
+5. Kein WebGL1-Fallback: Der Licht-Shader braucht WebGL2 (GLSL 300 es). Für sehr alte Geräte Stufe „Sparsam“ ohne
    eigenen Shader prüfen.
 
 ## Nützliche Befehle
