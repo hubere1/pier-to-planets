@@ -14,6 +14,7 @@
     "simulate": "tsx src/bin/simulate.ts"
   },
   "dependencies": {
-    "@ptp/content": "*"
+    "@ptp/content": "*",
+    "break_infinity.js": "^2.2.0"
   }
 }
