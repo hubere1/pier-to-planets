@@ -8,7 +8,8 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 - **M1 Stilprobe + Geräte-Durchstich:** Look freigegeben (D-030), 60 fps auf Gerät belegt; nur Referenztafel offen.
 - **M2 Simulationskern + Ära 1:** abgeschlossen.
 - **M3 Ära 1 komplett spielbar:** abgeschlossen 05.10.2026 (Version 0.3.0, `versionCode 2`). `npm run verify` lokal
-  grün (30 Playwright-Tests, 212 Vitest-Tests, Gate grün). Nachweise: `docs/m3/geraetelauf.md` + Screenshots in `docs/m3/`.
+  grün (30 Playwright-Tests, 212 Vitest-Tests, Gate grün), **CI grün auf `6c1d894`** (Run 37326605189, 14,6 Min;
+  Job-Limit danach auf 30 Min angehoben). Nachweise: `docs/m3/geraetelauf.md` + Screenshots in `docs/m3/`.
 - Nächster Meilenstein: **M4 Ära 2 Flughafen + Ära-Wechsel** (`docs/07-milestones.md`).
 
 ## M3 – was fertig ist
