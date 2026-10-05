@@ -3,6 +3,8 @@
  * Zeit für die Darstellung kommt aus dem Ticker (nicht aus der Sim, D-017: Tag-Nacht kosmetisch).
  */
 import { Application, Texture, WebGLRenderer } from 'pixi.js';
+import { sceneView } from '@ptp/sim';
+import type { GameSession } from '../loop/session.ts';
 import { loadEra } from './assets.ts';
 import { Camera } from './camera.ts';
 import { dayState } from './daynight.ts';
@@ -10,7 +12,7 @@ import { debug, type Quality } from './debugState.ts';
 import { computeStageLayout } from './layout.ts';
 import { MAX_LIGHTS } from './lighting/composite.ts';
 import { Pipeline } from './pipeline.ts';
-import { HarborScene } from './scene/harbor.ts';
+import { HarborScene, type SceneHit } from './scene/harbor.ts';
 
 const QUALITY: Record<
   Quality,
@@ -26,7 +28,39 @@ function deviceSize() {
   return { w: Math.round(window.innerWidth * dpr), h: Math.round(window.innerHeight * dpr), dpr };
 }
 
-export async function startStage(host: HTMLElement): Promise<() => void> {
+export interface ScreenRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface StageHandle {
+  stop(): void;
+  /** Kamera schwenkt zum Gebäude (docs/05: gewähltes Gebäude bleibt sichtbar). */
+  focus(building: string): void;
+  /** Umriss eines Szenen-Objekts in CSS-Pixeln (Coach-Marks, fliegende Münzen). */
+  screenRect(target: SceneHit): ScreenRect | null;
+  /** Erstes liegendes Fahrzeug (Tutorial). */
+  firstDocked(): number | null;
+  /** Render-Schleife anhalten (Hintergrund, Akku – docs/02 NFR-P). */
+  setRunning(running: boolean): void;
+  /** Höchstbildrate (60 oder 30; Vollbild-Panel drosselt, docs/05). */
+  setMaxFps(fps: number): void;
+  /** Von Panel + Navigation (unten) verdeckte Höhe in CSS-Pixeln. */
+  setInsets(bottom: number): void;
+}
+
+export interface StageOptions {
+  session: GameSession;
+  onHit(hit: SceneHit): void;
+}
+
+/** Bewegung bis zu dieser Strecke (CSS-px) gilt als Tippen statt Wischen. */
+const TAP_SLOP = 8;
+
+export async function startStage(host: HTMLElement, opts: StageOptions): Promise<StageHandle> {
+  const { session } = opts;
   const app = new Application();
   const size = deviceSize();
   await app.init({
@@ -52,9 +86,15 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   const camera = new Camera();
   camera.jumpTo(debug.camera.value);
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  camera.reducedMotion = motionQuery.matches;
+  const applyMotion = () => {
+    camera.reducedMotion = motionQuery.matches || debug.reducedMotion.value;
+    scene.reducedMotion = camera.reducedMotion;
+  };
+  applyMotion();
   /** Gerätepixel je Spiel-Pixel (für die Umrechnung der Fingerbewegung). */
   let pxPerGamePx = 1;
+  let layoutNow = computeStageLayout(deviceSize().w, deviceSize().h);
+  const insets = { bottom: 0 };
 
   /**
    * Pixis WebGL-Batcher bindet nur die belegten Textur-Einheiten, der Batch-Shader deklariert aber
@@ -71,11 +111,14 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   const applyLayout = () => {
     const { w, h } = deviceSize();
     const layout = computeStageLayout(w, h);
+    layoutNow = layout;
     pxPerGamePx = layout.outW / layout.gameW;
     app.renderer.resize(w, h);
     pipeline.resize(layout);
     fillTextureUnits();
-    scene.setHeight(layout.gameH);
+    // CSS-Pixel → Spiel-Pixel
+    const k = (window.devicePixelRatio || 1) / pxPerGamePx;
+    scene.setHeight(layout.gameH, insets.bottom * k);
     debug.stats.value = {
       ...debug.stats.value,
       scale: layout.scale,
@@ -86,19 +129,33 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   applyLayout();
   window.addEventListener('resize', applyLayout);
 
-  // Kamera-Schwenk per Wischen (docs/06 §6). Nur waagerecht; Antippen bleibt für M3 frei.
+  // Kamera-Schwenk per Wischen (docs/06 §6); kurzes Antippen trifft Fahrzeuge und Gebäude.
   let pointerId: number | undefined;
   let lastX = 0;
+  let downX = 0;
+  let downY = 0;
+  let moved = false;
   canvas.style.touchAction = 'none';
+  const toStage = (clientX: number, clientY: number) => {
+    const dpr = window.devicePixelRatio || 1;
+    return {
+      x: (clientX * dpr - layoutNow.offsetX) / pxPerGamePx,
+      y: (clientY * dpr - layoutNow.offsetY) / pxPerGamePx,
+    };
+  };
   const onDown = (e: PointerEvent) => {
     if (pointerId !== undefined) return;
     pointerId = e.pointerId;
-    lastX = e.clientX;
+    lastX = downX = e.clientX;
+    downY = e.clientY;
+    moved = false;
     canvas.setPointerCapture(e.pointerId);
     camera.beginDrag();
   };
   const onMove = (e: PointerEvent) => {
     if (e.pointerId !== pointerId) return;
+    if (Math.hypot(e.clientX - downX, e.clientY - downY) > TAP_SLOP) moved = true;
+    if (!moved) return;
     const dpr = window.devicePixelRatio || 1;
     camera.dragBy(((e.clientX - lastX) * dpr) / pxPerGamePx);
     lastX = e.clientX;
@@ -107,14 +164,37 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
     if (e.pointerId !== pointerId) return;
     pointerId = undefined;
     camera.endDrag();
+    if (!moved && e.type === 'pointerup') {
+      const p = toStage(e.clientX, e.clientY);
+      const hit = scene.hitTest(p.x, p.y);
+      if (hit) opts.onHit(hit);
+    }
   };
-  const onMotion = () => (camera.reducedMotion = motionQuery.matches);
   canvas.addEventListener('pointerdown', onDown);
   canvas.addEventListener('pointermove', onMove);
   canvas.addEventListener('pointerup', onUp);
   canvas.addEventListener('pointercancel', onUp);
-  motionQuery.addEventListener('change', onMotion);
+  motionQuery.addEventListener('change', applyMotion);
+  const unwatchMotion = debug.reducedMotion.subscribe(applyMotion);
   let lastDebugCam = debug.camera.value;
+
+  // Automatische Qualität: nach je 10 s Messung eine Stufe herunter, wenn p95 > 20 ms (docs/04).
+  const AUTO_WINDOW_S = 10;
+  const AUTO_P95_MS = 20;
+  let autoTimer = 0;
+  let autoSamples: number[] = [];
+  const autoQuality = (dt: number, frameMs: number) => {
+    if (!debug.autoQuality.value || debug.quality.value === 'low') return;
+    autoTimer += dt;
+    autoSamples.push(frameMs);
+    if (autoTimer < AUTO_WINDOW_S) return;
+    const sorted = [...autoSamples].sort((a, b) => a - b);
+    const p95 = sorted[Math.floor(sorted.length * 0.95)] ?? 0;
+    if (p95 > AUTO_P95_MS) debug.quality.value = debug.quality.value === 'high' ? 'medium' : 'low';
+    else debug.autoQuality.value = false;
+    autoTimer = 0;
+    autoSamples = [];
+  };
 
   const frameTimes: number[] = [];
   const cpuTimes: number[] = [];
@@ -133,7 +213,14 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
     camera.update(dt);
     lastDebugCam = debug.camera.value = Math.round(camera.x);
     scene.setCamera(camera.x);
-    scene.setWarehouseStage(debug.warehouseStage.value);
+    session.frame();
+    const era = session.state.value.activeEra;
+    scene.sync(
+      sceneView(session.prev, era),
+      sceneView(session.state.value, era),
+      session.alpha,
+      dt,
+    );
     scene.setLayerVisible('far', q.far);
     scene.setLayerVisible('front', q.far);
     scene.update(dt, day);
@@ -182,6 +269,7 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
 
     pipeline.render({ world: scene.world, shadows: scene.shadows, scene });
 
+    if (app.ticker.maxFPS >= 60) autoQuality(dt, ticker.deltaMS);
     cpuTimes.push(performance.now() - t0);
     frameTimes.push(ticker.deltaMS);
     if (frameTimes.length > 240) {
@@ -202,9 +290,44 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
     }
   });
 
-  return () => {
-    window.removeEventListener('resize', applyLayout);
-    motionQuery.removeEventListener('change', onMotion);
-    app.destroy(true);
+  let maxFps = 60;
+  app.ticker.maxFPS = maxFps;
+  return {
+    stop() {
+      window.removeEventListener('resize', applyLayout);
+      motionQuery.removeEventListener('change', applyMotion);
+      unwatchMotion();
+      app.destroy(true);
+    },
+    focus(building) {
+      camera.focus(scene.cameraFor(building));
+    },
+    screenRect(target) {
+      const r = scene.rectOf(target);
+      if (!r) return null;
+      const dpr = window.devicePixelRatio || 1;
+      const k = pxPerGamePx / dpr;
+      return {
+        x: layoutNow.offsetX / dpr + r.x * k,
+        y: layoutNow.offsetY / dpr + r.y * k,
+        w: r.w * k,
+        h: r.h * k,
+      };
+    },
+    firstDocked: () => scene.firstDocked(),
+    setRunning(running) {
+      if (running) app.ticker.start();
+      else app.ticker.stop();
+    },
+    setInsets(bottom) {
+      if (bottom === insets.bottom) return;
+      insets.bottom = bottom;
+      applyLayout();
+    },
+    setMaxFps(fps) {
+      if (fps === maxFps) return;
+      maxFps = fps;
+      app.ticker.maxFPS = fps;
+    },
   };
 }

@@ -6,6 +6,8 @@ import { signal } from '@preact/signals';
 export type Quality = 'high' | 'medium' | 'low';
 
 export const debug = {
+  /** Debug-Knopf nur in der Entwicklung oder mit `?debug=0|1` (nicht im normalen Spiel). */
+  available: signal(import.meta.env.DEV),
   open: signal(false),
   /** ui=0 blendet die Regler aus (Pixeltests ohne DOM-Überlagerung). */
   hidden: signal(false),
@@ -13,14 +15,17 @@ export const debug = {
   /** Spielminuten pro Sekunde: 0 = Pause, 1 = Echtzeit (24 min/Tag), 60 = 1 h pro Sekunde. */
   speed: signal(1),
   quality: signal<Quality>('high'),
+  /** Einstellung „Auto“: Qualität sinkt, wenn die ersten Sekunden ruckeln (docs/04). */
+  autoQuality: signal(true),
   lighting: signal(true),
-  warehouseStage: signal(2),
+  /** „Animationen reduzieren“ aus den Einstellungen (zusätzlich zur Systemeinstellung). */
+  reducedMotion: signal(false),
   /** Kamera-Schwenk in Spiel-Pixeln (−40 … 40, D-029). */
   camera: signal(0),
   stats: signal({ fps: 0, p95: 0, cpu: 0, scale: 0, gameH: 0, sharp: false }),
 };
 
-/** URL-Parameter für reproduzierbare Screenshots: ?hour=12&speed=0&quality=low&stage=0&cam=-40&debug=1 */
+/** URL-Parameter für reproduzierbare Screenshots: ?hour=12&speed=0&quality=low&cam=-40&debug=1 */
 export function applyDebugQuery(search: string): void {
   const q = new URLSearchParams(search);
   const num = (k: string) => (q.has(k) ? Number(q.get(k)) : undefined);
@@ -31,11 +36,10 @@ export function applyDebugQuery(search: string): void {
   const quality = q.get('quality');
   if (quality === 'high' || quality === 'medium' || quality === 'low')
     debug.quality.value = quality;
-  const stage = num('stage');
-  if (stage !== undefined && [0, 1, 2].includes(stage)) debug.warehouseStage.value = stage;
   const cam = num('cam');
   if (cam !== undefined && Number.isFinite(cam)) debug.camera.value = cam;
   if (q.get('light') === '0') debug.lighting.value = false;
+  if (q.has('debug')) debug.available.value = true;
   if (q.get('debug') === '1') debug.open.value = true;
   if (q.get('ui') === '0') debug.hidden.value = true;
 }

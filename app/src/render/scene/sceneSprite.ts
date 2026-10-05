@@ -30,6 +30,10 @@ export class SceneSprite {
   private frameIdx = 0;
   private flipped = false;
   visible = true;
+  /** Silhouette (gesperrt/Bauplatz, docs/05 § Szene): 0 = normal, sonst Deckkraft der Silhouette. */
+  silhouette = 0;
+  /** Senkrechter Versatz in Spiel-Pixeln (Hüpfen beim Kauf). */
+  dy = 0;
 
   constructor(
     readonly asset: SpriteAsset,
@@ -55,6 +59,18 @@ export class SceneSprite {
 
   get stageCount(): number {
     return this.asset.stages.length;
+  }
+
+  get stage(): number {
+    return this.stageIdx;
+  }
+
+  /** Umriss des aktuellen Bilds in Ebenen-Koordinaten (Tippen, Coach-Marks). */
+  bounds(): { x: number; y: number; w: number; h: number } {
+    const frame = this.asset.stages[this.stageIdx]!.frames[this.frameIdx]!.albedo.frame;
+    const [ax, ay] = this.asset.anchor;
+    const left = this.flipped ? Math.round(this.x) - (frame.width - ax) : Math.round(this.x) - ax;
+    return { x: left, y: Math.round(this.y) - ay + this.dy, w: frame.width, h: frame.height };
   }
 
   /** Ankerpunkt eines benannten Punkts (Schornstein, Lampe) in Szenenkoordinaten. */
@@ -103,22 +119,35 @@ export class SceneSprite {
     const tex = frame[pass];
     const [ax, ay] = this.asset.anchor;
     const px = Math.round(this.x);
-    const py = Math.round(this.y);
+    const py = Math.round(this.y) + this.dy;
+    const sil = this.silhouette;
     const setup = (s: Sprite, flipY: boolean) => {
       s.texture = tex;
       s.anchor.set(ax / tex.frame.width, ay / tex.frame.height);
-      s.position.set(px, py);
+      s.position.set(px, flipY ? Math.round(this.y) : py);
       s.scale.x = this.flipped ? -1 : 1;
       if (flipY) s.scale.y = -1;
       s.visible = this.visible;
+      // Silhouette: dunkel und halb durchsichtig, ohne Lichter (Emissive schwarz).
+      s.tint =
+        sil > 0
+          ? pass === 'emissive'
+            ? 0x000000
+            : pass === 'albedo'
+              ? 0x252a36
+              : 0xffffff
+          : 0xffffff;
+      s.alpha = sil > 0 && pass !== 'normal' ? sil : 1;
     };
+    this.main.zIndex = Math.round(this.y);
     setup(this.main, false);
     if (this.reflection) {
       setup(this.reflection, true);
       // Markierung im Normalen-Puffer: Alpha 0,5 = Spiegelbild (composite.ts).
-      this.reflection.alpha = pass === 'normal' ? 0.5 : 1;
+      this.reflection.alpha = pass === 'normal' ? 0.5 : sil > 0 ? sil : 1;
     }
     if (this.shadow && pass === 'albedo') {
+      this.shadow.visible = this.shadow.visible && sil === 0;
       this.shadow.texture = frame.albedo;
       this.shadow.anchor.set(ax / tex.frame.width, ay / tex.frame.height);
       this.shadow.position.set(px, py);

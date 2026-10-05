@@ -69,7 +69,32 @@ describe('Camera', () => {
     const c = new Camera();
     c.jumpTo(25);
     expect(c.x).toBe(25);
-    c.jumpTo(99);
+    c.jumpTo(999);
     expect(c.x).toBe(CAM_RANGE);
+  });
+
+  it('focus gleitet zum Ziel; mit „Animationen reduzieren“ springt sie', () => {
+    const c = new Camera();
+    c.focus(80);
+    c.update(0.1);
+    expect(c.x).toBeGreaterThan(0);
+    expect(c.x).toBeLessThan(80);
+    for (let i = 0; i < 60; i++) c.update(1 / 30);
+    expect(c.x).toBeCloseTo(80, 0);
+    const r = new Camera();
+    r.reducedMotion = true;
+    r.focus(-60);
+    expect(r.x).toBe(-60);
+  });
+
+  it('Wischen bricht ein laufendes focus ab', () => {
+    const c = new Camera();
+    c.focus(100);
+    c.beginDrag();
+    c.update(0.1);
+    c.endDrag();
+    const x = c.x;
+    c.update(0.5);
+    expect(c.x).toBe(x);
   });
 });
