@@ -94,6 +94,11 @@ function onNotices(ctx: AppCtx, notices: readonly Notice[]): void {
           params: { stars: num(Number(a['stars'])) },
         });
         break;
+      case 'tap.denied':
+        // Tippen bei vollem Lager: Grund nennen statt stumm nichts tun (Lehre 4).
+        if (a['reason'] === 'stockFull')
+          q.push({ kind: 'toast', icon: 'warn', key: 'toast.stockFull' });
+        break;
       case 'save.failed':
         q.push({ kind: 'banner', icon: 'warn', key: 'banner.saveFailed' });
         break;

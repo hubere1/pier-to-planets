@@ -192,5 +192,6 @@
   "live.none": "keiner",
   "unload.action": "Entladen",
   "unload.waiting": "Kein Schiff am Steg",
-  "save.newerVersion": "Dieser Spielstand stammt aus einer neueren Version. Bitte aktualisiere die App – dein Stand bleibt unverändert."
+  "save.newerVersion": "Dieser Spielstand stammt aus einer neueren Version. Bitte aktualisiere die App – dein Stand bleibt unverändert.",
+  "toast.stockFull": "Lager voll – die Lagerhalle verkauft, so schnell sie kann."
 }

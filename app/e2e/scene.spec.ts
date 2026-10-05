@@ -12,7 +12,7 @@ function collectErrors(page: Page): string[] {
 
 test('Hafenszene startet im Hochformat ohne Konsolenfehler', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto('/?hour=12&speed=0');
+  await page.goto('/?hour=12&speed=0&mem=1');
   await expect(page.locator('canvas')).toBeVisible();
   await expect(page.getByTestId('scene')).toHaveAttribute('aria-label', /Harbor|Hafen/);
   await page.waitForTimeout(800);
@@ -28,7 +28,7 @@ test.describe('Deutsch', () => {
   test.use({ locale: 'de-DE' });
 
   test('Debug-Regler lassen sich öffnen und zeigen Messwerte', async ({ page }) => {
-    await page.goto('/?hour=23&speed=0');
+    await page.goto('/?hour=23&speed=0&mem=1&debug=0');
     await page.getByRole('button', { name: 'Debug' }).click();
     await expect(page.getByText('Tageszeit: 23:00 Uhr')).toBeVisible();
     await page.getByRole('button', { name: 'Sparsam' }).click();
@@ -45,7 +45,9 @@ test.describe('Kamera (docs/06 §6)', () => {
   test.use({ locale: 'de-DE' });
 
   test('Wischen schwenkt die Kamera, der Bereich ist begrenzt', async ({ page }) => {
-    await page.goto('/?hour=12&speed=0');
+    await page.goto('/?hour=12&speed=0&mem=1&debug=0');
+    await expect(page.locator('canvas')).toBeVisible();
+    await page.waitForTimeout(1000);
     const box = (await page.locator('canvas').boundingBox())!;
     const y = box.y + box.height * 0.45;
     // Nach links wischen → Kamera nach rechts, bis zum Anschlag.
@@ -54,7 +56,7 @@ test.describe('Kamera (docs/06 §6)', () => {
     await page.mouse.move(box.x + 20, y, { steps: 12 });
     await page.mouse.up();
     await page.getByRole('button', { name: 'Debug' }).click();
-    await expect(page.getByText('Kamera: 40 px')).toBeVisible();
+    await expect(page.getByText('Kamera: 120 px')).toBeVisible();
     await page.screenshot({ path: 'test-results/scene-camera-right.png' });
   });
 

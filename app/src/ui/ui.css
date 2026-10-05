@@ -35,6 +35,9 @@ body {
   font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.4;
+  /* Lange deutsche Wörter bei 200 % Schrift umbrechen statt abschneiden (NFR-Q02). */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 button {
@@ -236,6 +239,7 @@ button {
   height: calc(100% - var(--nav-h) - var(--hud-h) - var(--safe-top) - 16px);
 }
 .sheet-handle {
+  position: relative;
   align-self: center;
   width: 96px;
   height: 20px;
@@ -246,6 +250,12 @@ button {
   place-items: center;
   flex: none;
   touch-action: none;
+}
+.sheet-handle::after {
+  /* Trefferfläche 48 dp, ohne das Peek-Panel höher zu machen (NFR-Q04). */
+  content: '';
+  position: absolute;
+  inset: -16px 0 -12px;
 }
 .sheet-handle span {
   display: block;
@@ -451,15 +461,22 @@ button {
 }
 .prestige-gain {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   color: var(--star);
   margin: 0;
 }
+.prestige-gain .px-big {
+  flex: 1 1 0;
+  min-width: 0;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
 .prestige-lists {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .prestige-lists h3 {
   font-size: 0.875rem;
