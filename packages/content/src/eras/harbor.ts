@@ -1,0 +1,93 @@
+/**
+ * Ära 1 – Hafen (docs/03 §5). Zahlen sind Annahmen (A), belegt durch das Balancing-Gate
+ * (`npm run simulate -w packages/sim`, Report `docs/balance-report.md`).
+ */
+import type { EraDef } from '../types.ts';
+
+export const harbor: EraDef = {
+  id: 'harbor',
+  currency: 'harbor',
+  price: 1,
+  loadBase: 20,
+  tierBuilding: 'shipyard',
+  buildings: [
+    {
+      id: 'pier',
+      stage: 'arrival',
+      effect: 'vehicles',
+      perLevel: 0.05,
+      baseCost: 15,
+      growth: 1.1,
+      startLevel: 1,
+      unlockAtLifetime: 0,
+    },
+    {
+      id: 'crane',
+      stage: 'unload',
+      effect: 'goods',
+      perLevel: 1.5,
+      baseCost: 60,
+      growth: 1.12,
+      startLevel: 0,
+      unlockAtLifetime: 0,
+    },
+    {
+      id: 'warehouse',
+      stage: 'sales',
+      effect: 'goods',
+      perLevel: 1.2,
+      baseCost: 25,
+      growth: 1.09,
+      startLevel: 1,
+      unlockAtLifetime: 0,
+    },
+    {
+      id: 'fishMarket',
+      stage: 'sales',
+      effect: 'goods',
+      perLevel: 8,
+      baseCost: 1_000,
+      growth: 1.11,
+      startLevel: 0,
+      unlockAtLifetime: 500,
+    },
+    {
+      id: 'lighthouse',
+      stage: 'arrival',
+      effect: 'vehiclesPct',
+      perLevel: 0.1,
+      baseCost: 2_500,
+      growth: 1.13,
+      startLevel: 0,
+      unlockAtLifetime: 2_000,
+    },
+    {
+      id: 'shipyard',
+      stage: 'arrival',
+      effect: 'loadPct',
+      perLevel: 0.1,
+      baseCost: 8_000,
+      growth: 1.13,
+      startLevel: 0,
+      unlockAtLifetime: 10_000,
+    },
+    {
+      id: 'customs',
+      stage: 'sales',
+      effect: 'goods',
+      perLevel: 60,
+      baseCost: 50_000,
+      growth: 1.12,
+      startLevel: 0,
+      unlockAtLifetime: 50_000,
+    },
+  ],
+  vehicles: [
+    { id: 'fishingBoat', good: 'fish', fromMilestones: 0 },
+    { id: 'cutter', good: 'fish', fromMilestones: 1 },
+    { id: 'freighter', good: 'crates', fromMilestones: 2 },
+    { id: 'containerShip', good: 'containers', fromMilestones: 3 },
+  ],
+  goal: { id: 'spaceportPier', cost: 1e9, unlockAtLifetime: 1e6 },
+  starThreshold: 1e8,
+};
