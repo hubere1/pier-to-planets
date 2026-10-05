@@ -18,7 +18,7 @@ Nachweis: CI-Lauf, Terminal-Ausgabe. **M0 abgeschlossen 04.10.2026** (verify lok
 ## M1 – Stilprobe + Geräte-Durchstich
 Ziel: Look festlegen, bevor viel Grafik entsteht; Technik auf echtem Handy belegen.
 - [x] Spiel-Pixel-Bühne 360 × 640–800, ganzzahlige Skalierung + Sharp-Bilinear-Rest (`06` §2), Pixel-Test auf 720/1080/1440.
-- [~] Hafenszene (offen: Parallax-Kamera, siehe `STAND.md`): 6 Parallax-Ebenen, Wasser mit Spiegelung, 3 Gebäude (Steg, Lagerhalle in 3 Ausbaustufen, Leuchtturm), Fischerboot + Containerschiff, 4 Arbeiter, Möwen, Rauch.
+- [x] Hafenszene (Parallax-Kamera D-029): 6 Parallax-Ebenen, Wasser mit Spiegelung, 3 Gebäude (Steg, Lagerhalle in 3 Ausbaustufen, Leuchtturm), Fischerboot + Containerschiff, 4 Arbeiter, Möwen, Rauch.
 - [x] Generator-Pipeline: Albedo/Normal/Emissive aus Geometrie, Palette Hafen (48), Atlas, Manifest.
 - [x] Licht-Pass (quantisiert + Dither), 8 Tageszeit-LUTs, Emissive-Nacht, Sonnen-Schatten, Bloom.
 - [x] Debug-Regler: Tageszeit, Qualitätsstufe, Licht an/aus.
