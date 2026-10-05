@@ -4,7 +4,7 @@ Zuletzt aktualisiert: 05.10.2026. Diese Datei sagt dem nächsten Agenten bzw. En
 wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 
 ## Kurzfassung
-- **M0 Fundament:** abgeschlossen. **CI grün** auf Stand `1c3183c` (Run 37231141981, inkl. Pixeltests per Software-WebGL).
+- **M0 Fundament:** abgeschlossen. **CI grün** auf Stand `e780c94` (Run 37281812046, inkl. Pixeltests per Software-WebGL).
 - **M1 Stilprobe + Geräte-Durchstich:** großteils umgesetzt, **Abnahme offen**.
   Die Hafenszene läuft im Browser und im Android-Emulator, mit Licht, Tag-Nacht-Wechsel, Wasser und Spiegelungen.
 - Nächster Meilenstein nach M1-Abnahme: **M2 Simulationskern** (TDD, `docs/07-milestones.md`).
