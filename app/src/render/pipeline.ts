@@ -12,8 +12,9 @@ import {
   RenderTexture,
   Shader,
   Sprite,
+  Texture,
+  WebGLRenderer,
   type Renderer,
-  type Texture,
 } from 'pixi.js';
 import type { MapKind } from './assets.ts';
 import type { StageLayout } from './layout.ts';
@@ -29,6 +30,9 @@ export interface Frame {
   shadows: Container;
   scene: PassTarget;
 }
+
+/** Anzahl der Sampler im Licht-Pass (uAlbedo, uNormal, uEmissive, uShadow, uLut). */
+const COMPOSITE_SAMPLERS = 5;
 
 const rt = (w: number, h: number, scaleMode: 'nearest' | 'linear' = 'nearest') =>
   RenderTexture.create({ width: w, height: h, scaleMode, resolution: 1, antialias: false });
@@ -142,6 +146,12 @@ export class Pipeline {
   render(frame: Frame): void {
     const r = this.renderer;
     const clear = [0, 0, 0, 0] as const;
+    // Der Licht-Pass hält die G-Puffer auf den Einheiten 0–4. Rendert das nächste Bild in einen
+    // davon, gibt Pixi die Einheit frei, und der Batch-Shader meldet im Android-WebView „no
+    // texture bound to the unit n“. Daher vorher die leere Textur auf diese Einheiten legen.
+    if (r instanceof WebGLRenderer) {
+      for (let i = 0; i < COMPOSITE_SAMPLERS; i++) r.texture.bind(Texture.EMPTY, i);
+    }
     for (const pass of ['albedo', 'normal', 'emissive'] as const) {
       frame.scene.applyPass(pass);
       r.render({

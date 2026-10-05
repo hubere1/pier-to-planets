@@ -2,7 +2,7 @@
  * Bühne: PixiJS-Anwendung, Render-Schleife, Größenanpassung, Frame-Messung.
  * Zeit für die Darstellung kommt aus dem Ticker (nicht aus der Sim, D-017: Tag-Nacht kosmetisch).
  */
-import { Application } from 'pixi.js';
+import { Application, Texture, WebGLRenderer } from 'pixi.js';
 import { loadEra } from './assets.ts';
 import { Camera } from './camera.ts';
 import { dayState } from './daynight.ts';
@@ -56,12 +56,25 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   /** Gerätepixel je Spiel-Pixel (für die Umrechnung der Fingerbewegung). */
   let pxPerGamePx = 1;
 
+  /**
+   * Pixis WebGL-Batcher bindet nur die belegten Textur-Einheiten, der Batch-Shader deklariert aber
+   * Sampler für alle. Leere Einheiten melden im Android-WebView „no texture bound to the unit n“
+   * (Bild korrekt, aber Log-Flut). Daher einmal die leere Textur auf jede Einheit binden – nach
+   * dem Start und nach jedem Neuanlegen der Render-Ziele (zerstörte Texturen geben ihre Einheit frei).
+   */
+  const fillTextureUnits = () => {
+    const r = app.renderer;
+    if (!(r instanceof WebGLRenderer)) return;
+    for (let i = 0; i < r.limits.maxTextures; i++) r.texture.bind(Texture.EMPTY, i);
+  };
+
   const applyLayout = () => {
     const { w, h } = deviceSize();
     const layout = computeStageLayout(w, h);
     pxPerGamePx = layout.outW / layout.gameW;
     app.renderer.resize(w, h);
     pipeline.resize(layout);
+    fillTextureUnits();
     scene.setHeight(layout.gameH);
     debug.stats.value = {
       ...debug.stats.value,
