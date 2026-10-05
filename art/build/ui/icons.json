@@ -1,0 +1,18 @@
+{
+  "size": 12,
+  "icons": [
+    "coin",
+    "star",
+    "crystal",
+    "gear",
+    "build",
+    "goal",
+    "eras",
+    "lock",
+    "warn",
+    "close",
+    "check",
+    "clock",
+    "up"
+  ]
+}

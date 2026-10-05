@@ -1,0 +1,14 @@
+{
+  "era": "ui",
+  "note": "UI-Rahmen und Symbole: Design-Tokens aus docs/05 plus je eine dunklere/hellere Stufe für Kanten und Glanz.",
+  "ramps": {
+    "base": ["#0b0c10", "#14161c", "#1d2129", "#272c37", "#3a4150", "#4a5263"],
+    "text": ["#a9abb6", "#f3eee2"],
+    "positive": ["#3f7a38", "#7bd86f"],
+    "risk": ["#8c3434", "#ff6b6b"],
+    "warning": ["#9c6416", "#ffb13d"],
+    "star": ["#b8902a", "#ffd95a", "#fff1b0"],
+    "crystal": ["#3a8c99", "#7fe3f0", "#d4f7fb"],
+    "accent": ["#8c6420", "#f2b544", "#ffd98a"]
+  }
+}

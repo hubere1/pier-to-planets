@@ -3,63 +3,43 @@
  * Alle Objekte aus Geometrie: Albedo nur Palettenfarben, Normalen aus derselben Form,
  * Emissive für Fenster, Lampen und Positionslichter.
  */
-import { readFileSync } from 'node:fs';
-import type { Palette } from '../../../tools/lib/palette.ts';
-import { hash, N, Raster, type ColorRef, type NormalIndex } from '../lib/raster.ts';
+import { hash, N, type ColorRef, type NormalIndex, type Raster } from '../lib/raster.ts';
 import type { SpriteDef } from '../lib/sprite.ts';
+import {
+  brickAnnex,
+  crane,
+  cutter,
+  customs,
+  fishMarket,
+  freighter,
+  harbormaster,
+  scaffold,
+  shipyard,
+  sign,
+  spaceportPier,
+  spark,
+  STAGES,
+  stockPile,
+} from './buildings.ts';
+import {
+  BEAM,
+  brickWall,
+  CITY,
+  GREEN,
+  LAMP,
+  mk,
+  palette,
+  RED,
+  WIN,
+  WIN_DIM,
+  window,
+} from './common.ts';
 
-const palette = JSON.parse(
-  readFileSync(new URL('../../palettes/harbor.json', import.meta.url), 'utf8'),
-) as Palette;
-
-const mk = (w: number, h: number) => new Raster(w, h, palette);
-
-// Emissive-Farben (Lichtfarben, nicht an die Palette gebunden – docs/06 §7).
-const WIN = '#ffc96b';
-const WIN_DIM = '#d9873a';
-const LAMP = '#ffe7a3';
-const BEAM = '#fff4c8';
-const RED = '#ff4b3a';
-const GREEN = '#5dff7c';
-const CITY = '#ffb25c';
-
-/** Fenster mit Rahmen, Glas und optionalem Innenlicht. */
-function window(r: Raster, x: number, y: number, w: number, h: number, lit: string | false): void {
-  r.rect(x - 1, y - 1, w + 2, h + 2, 'wood.1');
-  r.rect(x, y, w, h, 'sea.1');
-  for (let yy = y; yy < y + h; yy++) {
-    for (let xx = x; xx < x + w; xx++) {
-      if (lit) r.glow(xx, yy, lit);
-    }
-  }
-  // Sprosse und Lichtkante (oben links heller Glanz)
-  if (w >= 6) r.vline(x + Math.floor(w / 2), y, h, 'wood.1');
-  if (h >= 6) r.hline(x, y + Math.floor(h / 2), w, 'wood.1');
-  r.set(x, y, 'sea.3');
-  if (lit) r.glow(x, y, lit);
-}
-
-function brickWall(r: Raster, x: number, y: number, w: number, h: number, seed: number): void {
-  for (let yy = y; yy < y + h; yy++) {
-    const course = Math.floor((yy - y) / 3);
-    for (let xx = x; xx < x + w; xx++) {
-      const mortarRow = (yy - y) % 3 === 2;
-      const joint = (xx - x + (course % 2) * 3) % 6 === 0;
-      if (mortarRow || joint) {
-        r.set(xx, yy, 'brick.1');
-      } else {
-        const v = hash(Math.floor((xx - x + (course % 2) * 3) / 6), course, seed);
-        r.set(xx, yy, v < 0.25 ? 'brick.3' : v < 0.85 ? 'brick.2' : 'brick.1');
-      }
-    }
-  }
-}
-
-// ── Steg ────────────────────────────────────────────────────────────────────
-function pier(): SpriteDef {
+// ── Steg (6 Ausbaustufen: Geländer 10, Laternen 25, Rettungsringe 50, Unterstand 100, Fahnen 200) ─
+function pierStage(k: number) {
   const W = 186;
-  const H = 44;
-  const deck = 4;
+  const H = 64;
+  const deck = H - 40;
   const r = mk(W, H);
   r.noiseRect(0, deck, W, 3, ['wood.4', 'wood.4', 'wood.5', 'wood.3'], 11, N.up);
   r.rect(0, deck + 3, W, 4, 'wood.3');
@@ -72,28 +52,74 @@ function pier(): SpriteDef {
     r.hline(x, H - 2, 4, 'teal.0');
     r.hline(x, H - 1, 4, 'teal.0');
     if (x + 24 < W) {
-      for (let k = 0; k < 16; k++) r.set(x + 4 + k, deck + 8 + Math.floor(k * 0.45), 'wood.1');
+      for (let i = 0; i < 16; i++) r.set(x + 4 + i, deck + 8 + Math.floor(i * 0.45), 'wood.1');
     }
   }
   // Poller auf dem Deck
-  for (const bx of [24, 96, 168]) {
-    r.rect(bx, 1, 4, 3, 'tar.2');
-    r.hline(bx - 1, 0, 6, 'tar.2', N.up);
+  const bollards = k >= 3 ? [24, 60, 96, 132, 168] : [24, 96, 168];
+  for (const bx of bollards) {
+    r.rect(bx, deck - 3, 4, 3, 'tar.2');
+    r.hline(bx - 1, deck - 4, 6, 'tar.2', N.up);
+  }
+  const points: Record<string, readonly [number, number]> = {};
+  if (k >= 1) {
+    // Geländer zur Wasserseite
+    r.hline(0, deck - 8, W, 'wood.3', N.up);
+    for (let x = 2; x < W; x += 10) r.vline(x, deck - 7, 7, 'wood.2');
+  }
+  if (k >= 2) {
+    // Laternen
+    for (const [i, lx] of [44, 116].entries()) {
+      r.vline(lx + 1, deck - 20, 20, 'tar.1');
+      r.rect(lx, deck - 24, 3, 4, 'brass.1');
+      r.set(lx + 1, deck - 23, 'brass.3', N.flat, LAMP);
+      r.set(lx + 1, deck - 22, 'brass.3', N.flat, LAMP);
+      points[`lamp${i}`] = [lx + 1, deck - 22];
+    }
+  }
+  if (k >= 3) {
+    // Rettungsringe am Geländer
+    for (const rx of [30, 102, 150]) {
+      r.ellipse(rx, deck - 4, 2.6, 2.6, 'brick.3');
+      r.set(rx, deck - 4, 'wood.4');
+      r.set(rx - 2, deck - 4, 'cream.1');
+      r.set(rx + 2, deck - 4, 'cream.1');
+    }
+  }
+  if (k >= 4) {
+    // Unterstand am Stegkopf
+    r.rect(150, deck - 26, 30, 2, 'brick.1', N.up);
+    r.vline(151, deck - 24, 24, 'wood.2');
+    r.vline(178, deck - 24, 24, 'wood.2');
+    r.rect(155, deck - 12, 20, 4, 'wood.3');
+    window(r, 160, deck - 20, 8, 4, WIN_DIM);
+    points['shelter'] = [164, deck - 18];
+  }
+  if (k >= 5) {
+    for (const fx of [8, 182]) {
+      r.vline(fx, deck - 34, 34, 'stone.3', N.right);
+      r.rect(fx - 8, deck - 33, 8, 5, fx < 100 ? 'cblue.1' : 'brick.2');
+      points[fx < 100 ? 'flagL' : 'flagR'] = [fx - 4, deck - 31];
+    }
   }
   r.outline();
   r.removeOrphans();
+  return { frames: [r], points };
+}
+
+function pier(): SpriteDef {
   return {
     id: 'harbor.pier',
-    anchor: [0, H],
+    anchor: [0, 64],
     reflect: true,
     shadow: false,
-    stages: [{ frames: [r] }],
+    stages: Array.from({ length: STAGES }, (_, k) => pierStage(k)),
   };
 }
 
 // ── Kaimauer ────────────────────────────────────────────────────────────────
-// Breiter als die Bühne: Reserve für den Kamera-Schwenk (D-029); Muster bleibt an X = 44 verankert.
-const QUAY_PAD = 44;
+// Reicht nach links bis unter die Werft (Kamera-Schwenk, D-029); Muster bleibt an X = QUAY_PAD verankert.
+const QUAY_PAD = 166;
 
 function quay(): SpriteDef {
   const W = 206 + QUAY_PAD;
@@ -135,8 +161,8 @@ function quay(): SpriteDef {
   };
 }
 
-// ── Lagerhalle (3 Ausbaustufen: Stufe 1 / 10 / 25) ──────────────────────────
-function warehouseStage(stage: 0 | 1 | 2) {
+// ── Lagerhalle (6 Ausbaustufen: 2. Stockwerk 10, Rolltor 25, Dachkran 50, Anbau 100, Fahne 200) ─
+function warehouseStage(stage: number) {
   const W = 100;
   const H = 120;
   const r = mk(W, H);
@@ -190,11 +216,11 @@ function warehouseStage(stage: 0 | 1 | 2) {
   r.vline(chX + 5, chTop, 10, 'brick.0', N.right);
 
   // Erdgeschoss: Tor
-  const doorW = stage === 2 ? 26 : 18;
-  const doorH = stage === 2 ? 26 : 24;
+  const doorW = stage >= 2 ? 26 : 18;
+  const doorH = stage >= 2 ? 26 : 24;
   const dx = Math.round(cx - doorW / 2);
   const dy = H - 4 - doorH;
-  if (stage === 2) {
+  if (stage >= 2) {
     r.rect(dx - 1, dy - 3, doorW + 2, doorH + 3, 'stone.0');
     for (let yy = dy; yy < dy + doorH; yy++)
       r.hline(dx, yy, doorW, (yy - dy) % 3 === 2 ? 'stone.1' : 'stone.2');
@@ -229,8 +255,16 @@ function warehouseStage(stage: 0 | 1 | 2) {
   }
 
   const points: Record<string, readonly [number, number]> = { chimney: [chX + 3, chTop - 2] };
-  if (stage === 2) {
-    // Kran auf dem Dach (Meilenstein 25) und Lampen neben dem Rolltor
+  if (stage >= 4) {
+    // Anbau links (Meilenstein 100)
+    brickAnnex(r, 1, H - 30, 15, 26);
+    r.rect(1, H - 4, 15, 4, 'stone.1');
+    window(r, 5, H - 22, 6, 6, WIN);
+    points['annex'] = [8, H - 19];
+  }
+  if (stage >= 5) Object.assign(points, flagOn(r, cx, top - 34));
+  if (stage >= 3) {
+    // Kran auf dem Dach (Meilenstein 50)
     const kx = x0 + 6;
     const ky = top - 4;
     r.vline(kx, ky - 22, 22, 'brass.1', N.left);
@@ -240,6 +274,9 @@ function warehouseStage(stage: 0 | 1 | 2) {
     r.vline(kx + 24, ky - 19, 10, 'tar.2');
     r.rect(kx + 23, ky - 9, 3, 2, 'tar.1');
     r.rect(kx - 2, ky - 1, 6, 3, 'tar.2', N.up);
+  }
+  if (stage >= 2) {
+    // Lampen neben dem Rolltor und Schild (Meilenstein 25)
     for (const lx of [dx - 5, dx + doorW + 3]) {
       r.rect(lx, dy + 2, 3, 4, 'brass.1');
       r.set(lx + 1, dy + 3, 'brass.3', N.flat, LAMP);
@@ -274,20 +311,30 @@ function brickWallClip(r: Raster, x: number, y: number, w: number, h: number, se
   }
 }
 
+function flagOn(r: Raster, x: number, top: number): Record<string, readonly [number, number]> {
+  r.vline(x, top, 16, 'stone.3', N.right);
+  r.set(x, top - 1, 'brass.2');
+  r.rect(x + 1, top + 1, 8, 5, 'brass.2');
+  r.hline(x + 1, top + 4, 8, 'brass.1');
+  return { flag: [x + 4, top + 3] };
+}
+
 function warehouse(): SpriteDef {
   return {
     id: 'harbor.warehouse',
     anchor: [50, 120],
     shadow: true,
-    stages: [warehouseStage(0), warehouseStage(1), warehouseStage(2)],
+    stages: Array.from({ length: STAGES }, (_, k) => warehouseStage(k)),
   };
 }
 
 // ── Leuchtturm ──────────────────────────────────────────────────────────────
-function lighthouse(): SpriteDef {
+/** `k = -1`: dunkler, alter Turm (vor dem Kauf); 0–5: Ausbaustufen mit Licht. */
+function lighthouseStage(k: number) {
   const W = 32;
   const H = 100;
   const r = mk(W, H);
+  const lit = k >= 0;
   const cx = 16;
   for (let y = 30; y < H; y++) {
     const t = (y - 30) / (H - 30);
@@ -305,9 +352,11 @@ function lighthouse(): SpriteDef {
   r.vline(cx, H - 10, 10, 'wood.0');
   for (const wy of [48, 72]) {
     r.rect(cx - 1, wy, 2, 3, 'sea.1');
-    for (let k = 0; k < 3; k++) {
-      r.glow(cx - 1, wy + k, WIN);
-      r.glow(cx, wy + k, WIN);
+    for (let i = 0; i < 3; i++) {
+      if (lit && (wy === 72 || k >= 1)) {
+        r.glow(cx - 1, wy + i, WIN);
+        r.glow(cx, wy + i, WIN);
+      }
     }
   }
   // Galerie mit Geländer
@@ -317,7 +366,8 @@ function lighthouse(): SpriteDef {
   for (let x = cx - 12; x < cx + 12; x += 3) r.vline(x, 24, 3, 'tar.2');
   // Laternenraum
   r.rect(cx - 6, 13, 12, 11, 'brass.3');
-  for (let y = 13; y < 24; y++) for (let x = cx - 6; x < cx + 6; x++) r.glow(x, y, BEAM);
+  if (lit) for (let y = 13; y < 24; y++) for (let x = cx - 6; x < cx + 6; x++) r.glow(x, y, BEAM);
+  else r.rect(cx - 5, 14, 10, 9, 'sea.1');
   r.vline(cx - 6, 13, 11, 'brass.0');
   r.vline(cx + 5, 13, 11, 'brass.0');
   r.vline(cx, 13, 11, 'brass.1');
@@ -330,14 +380,37 @@ function lighthouse(): SpriteDef {
     }
   }
   r.vline(cx, 2, 4, 'tar.2');
-  r.set(cx, 1, 'brass.2');
+  r.set(cx, 1, k >= 3 ? 'brass.3' : 'brass.2');
+  if (k >= 2) {
+    // Messingkranz unter der Kuppel
+    r.hline(cx - 7, 12, 14, 'brass.2', N.up);
+  }
+  if (k >= 3) {
+    // zweite Galerie
+    r.hline(cx - 10, 44, 20, 'tar.1');
+    r.hline(cx - 10, 41, 20, 'tar.2');
+    for (let x = cx - 10; x < cx + 10; x += 3) r.vline(x, 42, 2, 'tar.2');
+  }
+  if (k >= 4) {
+    // Nebelhorn + rotes Warnlicht
+    r.rect(cx + 7, 30, 4, 3, 'brass.1');
+    r.set(cx - 9, 26, 'brick.3', N.flat, RED);
+  }
+  if (k >= 5) {
+    r.vline(cx + 11, 6, 21, 'stone.3', N.right);
+    r.rect(cx + 12, 7, 6, 4, 'cblue.1');
+  }
   r.outline();
   r.removeOrphans();
+  return { frames: [r], points: { lamp: [cx, 18] as const } };
+}
+
+function lighthouse(): SpriteDef {
   return {
     id: 'harbor.lighthouse',
-    anchor: [16, H],
+    anchor: [16, 100],
     shadow: true,
-    stages: [{ frames: [r], points: { lamp: [cx, 18] } }],
+    stages: [-1, 0, 1, 2, 3, 4, 5].map(lighthouseStage),
   };
 }
 
@@ -796,6 +869,18 @@ export function harborSprites(): SpriteDef[] {
     lampPost(),
     crates(),
     pile(),
+    crane(),
+    fishMarket(),
+    customs(),
+    shipyard(),
+    spaceportPier(),
+    cutter(),
+    freighter(),
+    scaffold(),
+    sign(),
+    spark(),
+    stockPile(),
+    harbormaster(),
   ];
 }
 

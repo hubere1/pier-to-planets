@@ -25,7 +25,7 @@
     "dev": "npm run dev -w app",
     "verify": "tsx tools/verify.ts",
     "android:sync": "npm run build && cap sync android",
-    "art": "tsx tools/gen-luts.ts && tsx tools/build-atlas.ts"
+    "art": "tsx tools/gen-luts.ts && tsx tools/build-atlas.ts && tsx tools/build-ui.ts"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.2",
