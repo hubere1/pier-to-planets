@@ -4,6 +4,7 @@
  */
 import { Application } from 'pixi.js';
 import { loadEra } from './assets.ts';
+import { Camera } from './camera.ts';
 import { dayState } from './daynight.ts';
 import { debug, type Quality } from './debugState.ts';
 import { computeStageLayout } from './layout.ts';
@@ -48,9 +49,17 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   const pipeline = new Pipeline(app.renderer, assets.lut, assets.lutCount);
   app.stage.addChild(pipeline.view);
 
+  const camera = new Camera();
+  camera.jumpTo(debug.camera.value);
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  camera.reducedMotion = motionQuery.matches;
+  /** Gerätepixel je Spiel-Pixel (für die Umrechnung der Fingerbewegung). */
+  let pxPerGamePx = 1;
+
   const applyLayout = () => {
     const { w, h } = deviceSize();
     const layout = computeStageLayout(w, h);
+    pxPerGamePx = layout.outW / layout.gameW;
     app.renderer.resize(w, h);
     pipeline.resize(layout);
     scene.setHeight(layout.gameH);
@@ -63,6 +72,36 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
   };
   applyLayout();
   window.addEventListener('resize', applyLayout);
+
+  // Kamera-Schwenk per Wischen (docs/06 §6). Nur waagerecht; Antippen bleibt für M3 frei.
+  let pointerId: number | undefined;
+  let lastX = 0;
+  canvas.style.touchAction = 'none';
+  const onDown = (e: PointerEvent) => {
+    if (pointerId !== undefined) return;
+    pointerId = e.pointerId;
+    lastX = e.clientX;
+    canvas.setPointerCapture(e.pointerId);
+    camera.beginDrag();
+  };
+  const onMove = (e: PointerEvent) => {
+    if (e.pointerId !== pointerId) return;
+    const dpr = window.devicePixelRatio || 1;
+    camera.dragBy(((e.clientX - lastX) * dpr) / pxPerGamePx);
+    lastX = e.clientX;
+  };
+  const onUp = (e: PointerEvent) => {
+    if (e.pointerId !== pointerId) return;
+    pointerId = undefined;
+    camera.endDrag();
+  };
+  const onMotion = () => (camera.reducedMotion = motionQuery.matches);
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
+  canvas.addEventListener('pointercancel', onUp);
+  motionQuery.addEventListener('change', onMotion);
+  let lastDebugCam = debug.camera.value;
 
   const frameTimes: number[] = [];
   const cpuTimes: number[] = [];
@@ -77,6 +116,10 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
     const day = dayState(debug.hour.value);
     const q = QUALITY[debug.quality.value];
 
+    if (debug.camera.value !== lastDebugCam) camera.jumpTo(debug.camera.value);
+    camera.update(dt);
+    lastDebugCam = debug.camera.value = Math.round(camera.x);
+    scene.setCamera(camera.x);
     scene.setWarehouseStage(debug.warehouseStage.value);
     scene.setLayerVisible('far', q.far);
     scene.setLayerVisible('front', q.far);
@@ -148,6 +191,7 @@ export async function startStage(host: HTMLElement): Promise<() => void> {
 
   return () => {
     window.removeEventListener('resize', applyLayout);
+    motionQuery.removeEventListener('change', onMotion);
     app.destroy(true);
   };
 }

@@ -15,10 +15,12 @@ export const debug = {
   quality: signal<Quality>('high'),
   lighting: signal(true),
   warehouseStage: signal(2),
+  /** Kamera-Schwenk in Spiel-Pixeln (−40 … 40, D-029). */
+  camera: signal(0),
   stats: signal({ fps: 0, p95: 0, cpu: 0, scale: 0, gameH: 0, sharp: false }),
 };
 
-/** URL-Parameter für reproduzierbare Screenshots: ?hour=12&speed=0&quality=low&stage=0&debug=1 */
+/** URL-Parameter für reproduzierbare Screenshots: ?hour=12&speed=0&quality=low&stage=0&cam=-40&debug=1 */
 export function applyDebugQuery(search: string): void {
   const q = new URLSearchParams(search);
   const num = (k: string) => (q.has(k) ? Number(q.get(k)) : undefined);
@@ -31,6 +33,8 @@ export function applyDebugQuery(search: string): void {
     debug.quality.value = quality;
   const stage = num('stage');
   if (stage !== undefined && [0, 1, 2].includes(stage)) debug.warehouseStage.value = stage;
+  const cam = num('cam');
+  if (cam !== undefined && Number.isFinite(cam)) debug.camera.value = cam;
   if (q.get('light') === '0') debug.lighting.value = false;
   if (q.get('debug') === '1') debug.open.value = true;
   if (q.get('ui') === '0') debug.hidden.value = true;

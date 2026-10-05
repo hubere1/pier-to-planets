@@ -18,6 +18,7 @@
   "debug.off": "Aus",
   "debug.stage": "Lagerhalle",
   "debug.stage.value": "Stufe {n}",
+  "debug.camera": "Kamera: {x} px",
   "debug.stats": "{fps} fps · p95 {p95} ms · CPU {cpu} ms",
   "debug.layout": "Skalierung ×{scale} · Höhe {gameH} px{sharp}",
   "debug.sharp": " · Sharp-Bilinear",

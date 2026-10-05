@@ -1,3 +1,4 @@
+import { CAM_RANGE } from '../render/camera.ts';
 import { debug, type Quality } from '../render/debugState.ts';
 import { t } from '../l10n/index.ts';
 
@@ -92,6 +93,17 @@ export function DebugPanel() {
             }))}
             onChange={(v) => (debug.warehouseStage.value = v)}
           />
+          <label class="dbg-time">
+            {t('debug.camera', { x: debug.camera.value })}
+            <input
+              type="range"
+              min={-CAM_RANGE}
+              max={CAM_RANGE}
+              step={1}
+              value={debug.camera.value}
+              onInput={(e) => (debug.camera.value = Number(e.currentTarget.value))}
+            />
+          </label>
           <p class="dbg-stats" data-testid="debug-stats">
             {t('debug.stats', { fps: s.fps, p95: s.p95, cpu: s.cpu })}
             <br />

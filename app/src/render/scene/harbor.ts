@@ -7,6 +7,7 @@
  */
 import { Container } from 'pixi.js';
 import type { EraAssets, MapKind, Point } from '../assets.ts';
+import { layerOffset, PARALLAX } from '../camera.ts';
 import type { DayState } from '../daynight.ts';
 import type { PassTarget } from '../pipeline.ts';
 import { createLayer, SceneSprite, type Layer } from './sceneSprite.ts';
@@ -54,6 +55,7 @@ export class HarborScene implements PassTarget {
   readonly layers: Record<LayerName, Layer>;
   private readonly all: SceneSprite[] = [];
   private offsetY = 0;
+  private readonly offsetX: Record<LayerName, number> = { far: 0, mid: 0, game: 0, front: 0 };
   private time = 0;
 
   private readonly clouds: { s: SceneSprite; speed: number }[] = [];
@@ -101,7 +103,7 @@ export class HarborScene implements PassTarget {
     };
 
     // Ebene 2 – Ferne
-    add('harbor.hills', 'far', 0, HORIZON);
+    add('harbor.hills', 'far', -40, HORIZON);
     add('harbor.city', 'far', 6, HORIZON);
     this.clouds.push({ s: add('harbor.cloudA', 'far', 40, 96), speed: 1.6 });
     this.clouds.push({ s: add('harbor.cloudB', 'far', 230, 150), speed: 2.4 });
@@ -113,7 +115,7 @@ export class HarborScene implements PassTarget {
     this.lighthouse = add('harbor.lighthouse', 'mid', 308, 215);
 
     // Ebene 4 – Spiel: Kai, Lagerhalle, Steg, Boot, Arbeiter
-    add('harbor.quay', 'game', -4, 456);
+    add('harbor.quay', 'game', -48, 456);
     this.warehouse = add('harbor.warehouse', 'game', 80, 414);
     add('harbor.crates', 'game', 128, 414);
     this.lampPost = add('harbor.lampPost', 'game', 156, 413);
@@ -161,6 +163,16 @@ export class HarborScene implements PassTarget {
     for (const l of Object.values(this.layers)) {
       l.root.y = this.offsetY;
       l.shadows.y = this.offsetY;
+    }
+  }
+
+  /** Kamera-Schwenk in Spiel-Pixeln; jede Ebene verschiebt sich um ihren Parallax-Faktor. */
+  setCamera(camX: number): void {
+    for (const name of Object.keys(this.layers) as LayerName[]) {
+      const dx = layerOffset(camX, PARALLAX[name]);
+      this.offsetX[name] = dx;
+      this.layers[name].root.x = dx;
+      this.layers[name].shadows.x = dx;
     }
   }
 
@@ -273,24 +285,31 @@ export class HarborScene implements PassTarget {
     const n = day.night;
     const out: PointLight[] = [];
     const push = (
+      layer: LayerName,
       p: Point | undefined,
       radius: number,
       intensity: number,
       color: readonly [number, number, number],
     ) => {
       if (p && intensity > 0.01)
-        out.push({ x: p[0], y: p[1] + this.offsetY, radius, intensity, color });
+        out.push({
+          x: p[0] + this.offsetX[layer],
+          y: p[1] + this.offsetY,
+          radius,
+          intensity,
+          color,
+        });
     };
-    push(this.lighthouse.point('lamp'), 70, 1.3 * n, BEAM);
-    push(this.lampPost.point('lamp'), 64, 1.6 * n, WARM);
-    push(this.warehouse.point('window'), 26, 0.6 * n, WARM);
-    push(this.warehouse.point('lampL'), 34, 0.9 * n, WARM);
-    push(this.warehouse.point('lampR'), 34, 0.9 * n, WARM);
-    push(this.boat.point('mast'), 22, 0.8 * n, CLEAR);
-    push(this.ship.point('bowLight'), 18, 0.7 * n, CLEAR);
+    push('mid', this.lighthouse.point('lamp'), 70, 1.3 * n, BEAM);
+    push('game', this.lampPost.point('lamp'), 64, 1.6 * n, WARM);
+    push('game', this.warehouse.point('window'), 26, 0.6 * n, WARM);
+    push('game', this.warehouse.point('lampL'), 34, 0.9 * n, WARM);
+    push('game', this.warehouse.point('lampR'), 34, 0.9 * n, WARM);
+    push('game', this.boat.point('mast'), 22, 0.8 * n, CLEAR);
+    push('mid', this.ship.point('bowLight'), 18, 0.7 * n, CLEAR);
     const lamp = this.lighthouse.point('lamp');
     const beam: [number, number, number, number] = lamp
-      ? [lamp[0], lamp[1] + this.offsetY, Math.cos(this.time * 0.8) * 190, n]
+      ? [lamp[0] + this.offsetX.mid, lamp[1] + this.offsetY, Math.cos(this.time * 0.8) * 190, n]
       : [0, 0, 0, 0];
     return { lights: out, beam };
   }
