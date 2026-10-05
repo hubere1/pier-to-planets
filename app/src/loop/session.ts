@@ -23,6 +23,8 @@ export interface SessionDeps {
   clock: Clock;
   store: SaveStore;
   appVersion: string;
+  /** Vorgegebener Start (Screenshots, `?preset=`): ignoriert gespeicherte Stände. */
+  initial?: GameState | undefined;
 }
 
 export interface LoadInfo {
@@ -58,6 +60,7 @@ export class GameSession {
   private saving: Promise<void> | null = null;
   private saveAgain = false;
   private failures = 0;
+  private halted = false;
 
   private constructor(
     private readonly deps: SessionDeps,
@@ -73,11 +76,11 @@ export class GameSession {
   }
 
   static async start(deps: SessionDeps): Promise<GameSession> {
-    const files = await deps.store.read();
+    const files = deps.initial ? {} : await deps.store.read();
     const choice = chooseSave(files);
     const now = deps.clock.now();
     for (const which of choice.quarantine) await deps.store.quarantine(which, now);
-    const state = choice.state ?? newGame(now % 2 ** 32);
+    const state = deps.initial ?? choice.state ?? newGame(now % 2 ** 32);
     const savedAt = choice.state && choice.header ? choice.header.savedAtWallMs : now;
     const session = new GameSession(
       deps,
@@ -189,9 +192,19 @@ export class GameSession {
     this.emit(notices);
   }
 
+  /**
+   * „Spielstand zurücksetzen“: nicht mehr speichern, laufende Schreibvorgänge abwarten,
+   * dann archiviert der Aufrufer den Stand (Regel 9: archivieren, nie löschen).
+   */
+  async halt(): Promise<void> {
+    this.halted = true;
+    this.paused = true;
+    await this.idle();
+  }
+
   /** Speichert den aktuellen Stand; parallele Aufrufe werden zusammengefasst. */
   save(): Promise<void> {
-    if (this.load.newerVersion) return Promise.resolve();
+    if (this.load.newerVersion || this.halted) return Promise.resolve();
     if (this.saving) {
       this.saveAgain = true;
       return this.saving;
