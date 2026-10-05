@@ -35,8 +35,8 @@ export interface VehicleTierDef {
   readonly id: string;
   /** Ware für Anzeige und Szene; Wert je Einheit regelt `EraDef.price`. */
   readonly good: string;
-  /** Ab so vielen erreichten Meilensteinen des Tier-Gebäudes (Werft) fährt diese Stufe. */
-  readonly fromMilestones: number;
+  /** Ab dieser Stufe des Tier-Gebäudes (Werft) fährt diese Fahrzeugstufe (D-032). */
+  readonly fromLevel: number;
 }
 
 export interface GoalDef {
@@ -55,7 +55,7 @@ export interface EraDef {
   /** Ladung eines Fahrzeugs vor Werft-Bonus (Waren). */
   readonly loadBase: number;
   readonly buildings: readonly BuildingDef[];
-  /** Gebäude, dessen Meilensteine die Fahrzeugstufe bestimmen. */
+  /** Gebäude, dessen Stufe die Fahrzeugstufe bestimmt. */
   readonly tierBuilding: string;
   readonly vehicles: readonly VehicleTierDef[];
   readonly goal: GoalDef;

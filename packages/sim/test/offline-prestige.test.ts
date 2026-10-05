@@ -63,13 +63,37 @@ describe('Offline (docs/03 §7, D-008, FR-P10)', () => {
   it('×2 per Werbung verdoppelt genau einmal; Schließen ohne Werbung gibt nichts extra', () => {
     const once = offline(s, 3600).state;
     const single = once.eras.harbor!.money;
-    const doubled = step(once, [{ type: 'claimOffline', boosted: true }], idle).state;
+    const doubled = step(once, [{ type: 'claimOffline', boosted: true, day: 1 }], idle).state;
     expect(doubled.eras.harbor!.money.toNumber()).toBeCloseTo(single.toNumber() * 2, 6);
     expect(doubled.lastOffline).toBeNull();
-    const again = step(doubled, [{ type: 'claimOffline', boosted: true }], idle).state;
+    const again = step(doubled, [{ type: 'claimOffline', boosted: true, day: 1 }], idle).state;
     expect(again.eras.harbor!.money.eq(doubled.eras.harbor!.money)).toBe(true);
-    const plain = step(once, [{ type: 'claimOffline', boosted: false }], idle).state;
+    const plain = step(once, [{ type: 'claimOffline', boosted: false, day: 1 }], idle).state;
     expect(plain.eras.harbor!.money.eq(single)).toBe(true);
+  });
+
+  it('×2 per Werbung höchstens einmal am Tag (D-034), am nächsten Tag wieder', () => {
+    const first = step(
+      offline(s, 3600).state,
+      [{ type: 'claimOffline', boosted: true, day: 5 }],
+      idle,
+    );
+    const second = step(
+      offline(first.state, 3600).state,
+      [{ type: 'claimOffline', boosted: true, day: 5 }],
+      idle,
+    );
+    expect(second.notices).toContainEqual({
+      ref: 'reward.denied',
+      args: { kind: 'offlineDouble', reason: 'limit' },
+    });
+    expect(second.state.lastOffline).toBeNull();
+    const nextDay = step(
+      offline(first.state, 3600).state,
+      [{ type: 'claimOffline', boosted: true, day: 6 }],
+      idle,
+    );
+    expect(nextDay.notices.map((n) => n.ref)).toEqual(['offline.doubled']);
   });
 
   it('schaltet Gebäude frei und meldet es im Rückkehr-Dialog (Lehre 3)', () => {

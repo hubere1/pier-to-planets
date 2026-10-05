@@ -6,7 +6,7 @@ import type { Command, Notice } from '../src/engine/types.ts';
 import { eraFlow } from '../src/econ/flow.ts';
 import { costFor } from '../src/econ/cost.ts';
 import { harbor } from '@ptp/content';
-import { DT, BOOST_PER_DAY } from '../src/rules.ts';
+import { DT, REWARD_LIMITS } from '../src/rules.ts';
 
 const active = { dt: DT, mode: 'active' as const };
 
@@ -138,7 +138,8 @@ describe('Kaufen (FR-K04, FR-K07)', () => {
     const r = step(newGame(1), [{ type: 'buy', era: 'harbor', building: 'pier' }], active);
     expect(r.notices[0]!.ref).toBe('buy.denied');
     expect(r.notices[0]!.args.reason).toBe('funds');
-    expect(Num.parse(r.notices[0]!.args.missing)?.toNumber()).toBeCloseTo(16.5, 9);
+    const price = costFor(harbor.buildings[0]!, 1, 1).toNumber();
+    expect(Num.parse(r.notices[0]!.args.missing)?.toNumber()).toBeCloseTo(price, 9);
     expect(r.state.eras.harbor!.levels.pier).toBe(1);
   });
 
@@ -195,9 +196,9 @@ describe('Diskret ≙ Erwartungswert (docs/03 §2: 1 h aktiv = Rate ±2 %)', () 
   // Poisson-Rauschen einer Stunde liegt bei ~3 % (900 Ankünfte); gemittelt über 10 Seeds
   // bleibt die Aussage „Mittel = Rate“ prüfbar (D-032).
   const cases: [string, Record<string, number>][] = [
-    ['Ankunft begrenzt', { pier: 5, crane: 10, warehouse: 10 }],
-    ['Entladen begrenzt', { pier: 10, crane: 2, warehouse: 10 }],
-    ['Absatz begrenzt', { pier: 10, crane: 10, warehouse: 3 }],
+    ['Ankunft begrenzt', { pier: 5, crane: 10, warehouse: 30 }],
+    ['Entladen begrenzt', { pier: 20, crane: 1, warehouse: 30 }],
+    ['Absatz begrenzt', { pier: 20, crane: 10, warehouse: 3 }],
     ['viele Ankünfte (gedeckelte Darstellung)', { pier: 60, crane: 30, warehouse: 30 }],
   ];
   for (const [name, levels] of cases) {
@@ -256,7 +257,7 @@ describe('Werbe-Boost (docs/03 §10, Lehre 8)', () => {
     );
     s = r.state;
     expect(s.boost.remaining).toBe(3 * 3600);
-    expect(s.boost.usedToday).toBe(BOOST_PER_DAY);
+    expect(s.rewards.used.boost).toBe(REWARD_LIMITS.boost);
     expect(r.notices.filter((n) => n.ref === 'reward.denied').map((n) => n.args.reason)).toEqual([
       'limit',
       'limit',

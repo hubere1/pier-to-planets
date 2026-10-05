@@ -17,7 +17,7 @@ export type Command =
   /** Nur nach echtem `onUserEarnedReward` senden (Regel 14). `day` = lokaler Tag vom Gerät. */
   | { type: 'applyReward'; kind: 'boost'; day: number }
   /** Rückkehr-Dialog schließen; `boosted` nur nach Werbe-Belohnung (×2, §10). */
-  | { type: 'claimOffline'; boosted: boolean };
+  | { type: 'claimOffline'; boosted: boolean; day: number };
 
 export type NoticeArgs = Readonly<Record<string, string | number>>;
 

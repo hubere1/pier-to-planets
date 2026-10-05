@@ -119,7 +119,8 @@ describe('Save (docs/04 § Save, FR-X02, Regel 9)', () => {
     expect(h.vehicles).toEqual([]);
     expect(h.unlocked).toContain('pier');
     expect(s.buyAmount).toBe(1);
-    expect(s.boost).toEqual({ remaining: 0, level: 0, day: 0, usedToday: 0 });
+    expect(s.boost).toEqual({ remaining: 0, level: 0 });
+    expect(s.rewards).toEqual({ day: 0, used: {} });
     expect(decodeState({}).eras.harbor).toBeDefined();
   });
 
@@ -128,7 +129,9 @@ describe('Save (docs/04 § Save, FR-X02, Regel 9)', () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     const h = r.state.eras.harbor!;
-    expect(h.levels).toMatchObject({ pier: 16, crane: 1, warehouse: 11 });
+    expect(h.levels).toMatchObject({ pier: 42, crane: 31, warehouse: 45 });
+    expect(r.state.rewards).toEqual({ day: 20366, used: { boost: 1 } });
+    expect(r.state.boost.remaining).toBeGreaterThan(1500);
     expect(h.money.toNumber()).toBeGreaterThan(0);
     expect(r.state.lastOffline?.counted).toBe(1800);
     const next = step(r.state, [], { dt: 0.1, mode: 'active' });

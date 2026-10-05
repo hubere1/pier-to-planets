@@ -12,6 +12,7 @@ import {
   type BuyAmount,
   type EraState,
   type GameState,
+  type RewardKind,
   type Vehicle,
   type VehiclePhase,
 } from '../model/state.ts';
@@ -120,6 +121,7 @@ function decodeEra(id: EraId, raw: unknown): EraState | undefined {
 }
 
 const BUY_AMOUNTS: readonly BuyAmount[] = [1, 10, 'max'];
+const REWARD_KINDS: readonly RewardKind[] = ['boost', 'offlineDouble'];
 
 /** Payload (aktuelles Schema) → GameState; Unbekanntes wird ignoriert, Fehlendes ergänzt. */
 export function decodeState(p: Obj): GameState {
@@ -134,6 +136,8 @@ export function decodeState(p: Obj): GameState {
   if (!eras.harbor) eras.harbor = base.eras.harbor!;
   const activeEra = ERA_IDS.find((id) => id === p.activeEra && eras[id]) ?? 'harbor';
   const boost = isObj(p.boost) ? p.boost : {};
+  const rewards = isObj(p.rewards) ? p.rewards : {};
+  const used = isObj(rewards.used) ? rewards.used : {};
   const lo = isObj(p.lastOffline) ? p.lastOffline : null;
   return {
     time: num(p.time, 0),
@@ -145,8 +149,12 @@ export function decodeState(p: Obj): GameState {
     boost: {
       remaining: num(boost.remaining, 0),
       level: num(boost.level, 0),
-      day: num(boost.day, 0),
-      usedToday: num(boost.usedToday, 0),
+    },
+    rewards: {
+      day: num(rewards.day, 0),
+      used: Object.fromEntries(
+        REWARD_KINDS.flatMap((k) => (typeof used[k] === 'number' ? [[k, used[k]]] : [])),
+      ),
     },
     lastOffline: lo
       ? {

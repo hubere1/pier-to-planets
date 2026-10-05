@@ -1,123 +1,64 @@
 {
   "schemaVersion": 1,
-  "checksum": "cde3506d4f9926456de1ccc11d106f2db9cffaf77827d2e94391276bd6003e3c",
+  "checksum": "72a69cdcd5225e2a2fad1ee8f82031fb147c2f9c7af6171bef1c4ca27bbcc533",
   "savedAtWallMs": 1791187200000,
   "appVersion": "0.1.0-m2",
   "payload": {
     "time": 2099.9999999999995,
-    "rng": 2498673512,
-    "nextVehicleId": 66,
+    "rng": 1866837842,
+    "nextVehicleId": 68,
     "activeEra": "harbor",
     "buyAmount": 1,
     "eras": {
       "harbor": {
-        "money": "1.37884671723936e3",
-        "runEarnings": "2.3771e3",
-        "lifetimeEarnings": "2.3771e3",
+        "money": "1.51334184466256e5",
+        "runEarnings": "1.8632098e5",
+        "lifetimeEarnings": "1.8632098e5",
         "levels": {
-          "pier": 16,
-          "crane": 1,
-          "warehouse": 11,
+          "pier": 42,
+          "crane": 31,
+          "warehouse": 45,
           "fishMarket": 0,
           "lighthouse": 0,
           "shipyard": 0,
           "customs": 0
         },
-        "unlocked": ["pier", "crane", "warehouse", "fishMarket", "lighthouse"],
+        "unlocked": ["pier", "crane", "warehouse", "fishMarket", "lighthouse", "shipyard"],
         "starsEarned": 0,
         "goalBuilt": false,
         "resets": 0,
         "vehicles": [
           {
-            "id": 47,
+            "id": 66,
             "tier": 0,
-            "load": 96.00000000000001,
-            "cargo": 82.4999999999995,
+            "load": 672,
+            "cargo": 0,
+            "phase": "leaving",
+            "t": 4.799999999999999,
+            "bonusTaps": 1,
+            "turnedAway": false
+          },
+          {
+            "id": 67,
+            "tier": 0,
+            "load": 672,
+            "cargo": 225.60000000000002,
             "phase": "docked",
-            "t": 62.60000000000062,
-            "bonusTaps": 10,
-            "turnedAway": false
-          },
-          {
-            "id": 48,
-            "tier": 0,
-            "load": 96.00000000000001,
-            "cargo": 96.00000000000001,
-            "phase": "docked",
-            "t": 56.600000000000534,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 49,
-            "tier": 0,
-            "load": 104,
-            "cargo": 104,
-            "phase": "docked",
-            "t": 50.60000000000045,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 50,
-            "tier": 0,
-            "load": 104,
-            "cargo": 104,
-            "phase": "docked",
-            "t": 8.899999999999984,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 51,
-            "tier": 0,
-            "load": 104,
-            "cargo": 104,
-            "phase": "waiting",
-            "t": 61.3000000000006,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 52,
-            "tier": 0,
-            "load": 112.00000000000001,
-            "cargo": 112.00000000000001,
-            "phase": "waiting",
-            "t": 53.00000000000048,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 54,
-            "tier": 0,
-            "load": 120,
-            "cargo": 120,
-            "phase": "waiting",
-            "t": 44.80000000000037,
-            "bonusTaps": 0,
-            "turnedAway": false
-          },
-          {
-            "id": 64,
-            "tier": 0,
-            "load": 120,
-            "cargo": 120,
-            "phase": "waiting",
-            "t": 7.799999999999988,
+            "t": 0.2,
             "bonusTaps": 0,
             "turnedAway": false
           }
         ],
-        "arrivalMass": 0.3225190374793314,
-        "stock": 0,
-        "served": 39.546875
+        "arrivalMass": 2.668146117458326,
+        "stock": 381.6,
+        "served": 287
       }
     },
-    "boost": { "remaining": 0, "level": 0, "day": 0, "usedToday": 0 },
+    "boost": { "remaining": 1510.0000000002638, "level": 1 },
+    "rewards": { "day": 20366, "used": { "boost": 1 } },
     "lastOffline": {
-      "earned": "1.35e3",
-      "byEra": { "harbor": "1.35e3" },
+      "earned": "1.512e5",
+      "byEra": { "harbor": "1.512e5" },
       "seconds": 1800,
       "counted": 1800,
       "doubled": false

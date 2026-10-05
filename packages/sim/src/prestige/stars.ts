@@ -5,7 +5,7 @@
 import type { EraId } from '@ptp/content';
 import { Num } from '../num/index.ts';
 import { eraDef, eraState, totalStars, type GameState } from '../model/state.ts';
-import { STAR_BONUS, STAR_EXPONENT, STAR_FACTOR } from '../rules.ts';
+import { RESET_HINT, STAR_BONUS, STAR_EXPONENT, STAR_FACTOR } from '../rules.ts';
 
 export function starsPossible(lifetime: Num, threshold: number): number {
   if (lifetime.lte(0)) return 0;
@@ -28,10 +28,6 @@ export interface PrestigePreview {
   nextStarAt: Num;
 }
 
-/** Ab so vielen neuen Sternen zeigt die Sim den Hinweis: max(Grundwert, Anteil · Sterne). */
-export const RESET_HINT_MIN = 1;
-export const RESET_HINT_SHARE = 0.5;
-
 export function prestigePreview(s: GameState, era: EraId): PrestigePreview {
   const def = eraDef(era);
   const e = eraState(s, era);
@@ -45,7 +41,7 @@ export function prestigePreview(s: GameState, era: EraId): PrestigePreview {
     starsAfter,
     incomePct: newStars * STAR_BONUS * 100,
     speedup,
-    worthIt: newStars >= Math.max(RESET_HINT_MIN, RESET_HINT_SHARE * before),
+    worthIt: newStars >= Math.max(RESET_HINT.min, RESET_HINT.share * before),
     nextStarAt: lifetimeForStars(Math.max(possible, e.starsEarned) + 1, def.starThreshold),
   };
 }

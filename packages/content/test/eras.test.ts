@@ -21,14 +21,14 @@ describe('Ära 1 Hafen (docs/03 §5, FR-P01)', () => {
     expect(harbor.goal.id).toBe('spaceportPier');
   });
 
-  it('hat 4 Fahrzeugstufen mit steigender Meilenstein-Schwelle', () => {
+  it('hat 4 Fahrzeugstufen mit steigender Werft-Schwelle', () => {
     expect(harbor.vehicles.map((v) => v.id)).toEqual([
       'fishingBoat',
       'cutter',
       'freighter',
       'containerShip',
     ]);
-    const steps = harbor.vehicles.map((v) => v.fromMilestones);
+    const steps = harbor.vehicles.map((v) => v.fromLevel);
     expect(steps).toEqual([...steps].sort((a, b) => a - b));
     expect(steps[0]).toBe(0);
   });

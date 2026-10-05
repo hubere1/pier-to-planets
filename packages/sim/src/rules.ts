@@ -54,6 +54,8 @@ export const STOCK_BUFFER_S = 20;
 export const STAR_FACTOR = 10;
 export const STAR_EXPONENT = 0.5;
 export const STAR_BONUS = 0.1;
+/** Hinweis „Neustart lohnt sich“ ab max(min; share · Sterne) neuen Sternen (§4.1, D-031). */
+export const RESET_HINT = { min: 10, share: 0.5 };
 
 /** Offline (§7, D-008). */
 export const OFFLINE_MIN_S = 60;
@@ -65,5 +67,8 @@ export const OFFLINE_MAX_JUMP_S = 30 * 86_400;
 export const BOOST_FACTOR = 2;
 export const BOOST_DURATION_S = 30 * 60;
 export const BOOST_MAX_S = 4 * 3600;
-export const BOOST_PER_DAY = 6;
+/** Tageslimits der Werbe-Belohnungen (§10, A; Offline-Verdopplung D-034). */
+export const REWARD_LIMITS = { boost: 6, offlineDouble: 1 };
+/** Faktor der Offline-Werbung im Rückkehr-Dialog (§10: ×2, A). */
+export const OFFLINE_AD = { factor: 2 };
 export const BOOST_GLIDE_S = 2;

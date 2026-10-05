@@ -18,7 +18,7 @@ describe('Views (docs/04 § Views, Lehre 4 + 5)', () => {
     const v = hud(s);
     expect(v.era).toBe('harbor');
     expect(v.money.isZero()).toBe(true);
-    // A = 1, E = 3, V = 1,2 → F = 1 Ware/s · 1 Taler
+    // A = 1, E = 24, V = 1,2 → F = 1 Ware/s · 1 Taler
     expect(v.incomePerSec.toNumber()).toBeCloseTo(1, 9);
     expect(v.stars).toBe(0);
   });
@@ -28,7 +28,10 @@ describe('Views (docs/04 § Views, Lehre 4 + 5)', () => {
     s.eras.harbor!.money = Num.of(10);
     const pier = buildingCard(s, 'harbor', 'pier');
     expect(pier).toMatchObject({ level: 1, unlocked: true, canBuy: false, blocked: 'funds' });
-    expect(pier.missing?.toNumber()).toBeCloseTo(6.5, 9);
+    expect(pier.missing?.toNumber()).toBeCloseTo(
+      costFor(s, 'harbor', 'pier', 1).toNumber() - 10,
+      9,
+    );
     const market = buildingCard(s, 'harbor', 'fishMarket');
     expect(market).toMatchObject({ blocked: 'locked', unlockAtLifetime: 500 });
   });
@@ -69,11 +72,9 @@ describe('Views (docs/04 § Views, Lehre 4 + 5)', () => {
   it('goalProgress und sceneView', () => {
     const s = newGame(1);
     s.eras.harbor!.money = Num.of(harbor.goal.cost / 4);
-    expect(goalProgress(s, 'harbor')).toMatchObject({
-      unlocked: false,
-      built: false,
-      progress: 0.25,
-    });
+    const goal = goalProgress(s, 'harbor');
+    expect(goal).toMatchObject({ unlocked: false, built: false });
+    expect(goal.progress).toBeCloseTo(0.25, 12);
     s.eras.harbor!.levels.warehouse = 26;
     const scene = sceneView(s, 'harbor');
     expect(scene.buildings.warehouse).toEqual({ level: 26, stage: 2, unlocked: true });

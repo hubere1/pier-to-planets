@@ -68,15 +68,16 @@ describe('Fluss mit Engpass (docs/03 §2)', () => {
     expect(r.arrivals).toBeCloseTo(0.1, 12);
     expect(r.load).toBe(20);
     expect(r.A).toBeCloseTo(2, 12);
-    expect(r.E).toBeCloseTo(1.5, 12);
+    expect(r.E).toBeCloseTo(12, 12);
     expect(r.V).toBeCloseTo(1.2, 12);
     expect(bottleneckStage(r)).toBe('sales');
   });
 
   it('Leuchtturm hebt λ, Werft die Ladung', () => {
     const r = stageRates(harbor, { pier: 1, lighthouse: 5, shipyard: 10 });
-    expect(r.arrivals).toBeCloseTo(0.05 * 1.5, 12);
-    expect(r.load).toBeCloseTo(20 * (1 + 0.1 * 10 * 2), 12);
+    const per = (id: string) => harbor.buildings.find((b) => b.id === id)!.perLevel;
+    expect(r.arrivals).toBeCloseTo(per('pier') * (1 + per('lighthouse') * 5), 12);
+    expect(r.load).toBeCloseTo(harbor.loadBase * (1 + per('shipyard') * 10 * 2), 12);
   });
 
   it('deckelt sichtbare Ankünfte, ohne A zu ändern (D-032)', () => {

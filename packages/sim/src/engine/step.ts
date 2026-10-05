@@ -13,6 +13,7 @@ import {
   freshEra,
   type EraState,
   type GameState,
+  type RewardKind,
   type Vehicle,
 } from '../model/state.ts';
 import { costFor, maxAffordable } from '../econ/cost.ts';
@@ -24,8 +25,9 @@ import {
   BOOST_DURATION_S,
   BOOST_GLIDE_S,
   BOOST_MAX_S,
-  BOOST_PER_DAY,
   LEAVE_S,
+  OFFLINE_AD,
+  REWARD_LIMITS,
   ROADSTEAD,
   STOCK_BUFFER_S,
   TAP_BONUS_MAX,
@@ -92,10 +94,10 @@ function advanceBoost(s: GameState, dt: number): void {
 }
 
 function tierFor(def: EraDef, e: EraState): number {
-  const reached = milestonesReached(e.levels[def.tierBuilding] ?? 0);
+  const level = e.levels[def.tierBuilding] ?? 0;
   let tier = 0;
   def.vehicles.forEach((v, i) => {
-    if (reached >= v.fromMilestones) tier = i;
+    if (level >= v.fromLevel) tier = i;
   });
   return tier;
 }
@@ -234,10 +236,10 @@ function applyCommand(s: GameState, cmd: Command, rng: Rng, notices: Notice[]): 
     case 'claimOffline': {
       const last = s.lastOffline;
       if (!last) return;
-      if (cmd.boosted && !last.doubled) {
+      if (cmd.boosted && !last.doubled && useReward(s, 'offlineDouble', cmd.day, notices)) {
         for (const [era, amount] of Object.entries(last.byEra) as [EraId, Num][]) {
           const e = s.eras[era];
-          if (e) earn(e, amount);
+          if (e) earn(e, amount.mul(OFFLINE_AD.factor - 1));
         }
         notices.push({ ref: 'offline.doubled', args: { earned: last.earned.serialize() } });
       }
@@ -358,21 +360,25 @@ function resetEra(s: GameState, era: EraId, rng: Rng, notices: Notice[]): void {
   notices.push({ ref: 'era.reset', args: { era, stars: preview.newStars } });
 }
 
+/** Verbraucht eine Nutzung des Tageslimits; neuer Tag setzt zurück. */
+function useReward(s: GameState, kind: RewardKind, day: number, notices: Notice[]): boolean {
+  if (day !== s.rewards.day) s.rewards = { day, used: {} };
+  const used = s.rewards.used[kind] ?? 0;
+  if (used >= REWARD_LIMITS[kind]) {
+    notices.push({ ref: 'reward.denied', args: { kind, reason: 'limit' } });
+    return false;
+  }
+  s.rewards.used[kind] = used + 1;
+  return true;
+}
+
 function applyBoost(s: GameState, day: number, notices: Notice[]): void {
   const b = s.boost;
-  if (day !== b.day) {
-    b.day = day;
-    b.usedToday = 0;
-  }
-  if (b.usedToday >= BOOST_PER_DAY) {
-    notices.push({ ref: 'reward.denied', args: { kind: 'boost', reason: 'limit' } });
-    return;
-  }
   if (b.remaining + BOOST_DURATION_S > BOOST_MAX_S) {
     notices.push({ ref: 'reward.denied', args: { kind: 'boost', reason: 'full' } });
     return;
   }
-  b.usedToday++;
+  if (!useReward(s, 'boost', day, notices)) return;
   b.remaining += BOOST_DURATION_S;
   notices.push({ ref: 'reward.applied', args: { kind: 'boost', remaining: b.remaining } });
 }

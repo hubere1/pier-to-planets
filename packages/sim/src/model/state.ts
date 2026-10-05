@@ -58,9 +58,16 @@ export interface BoostState {
   remaining: number;
   /** Aktueller Faktor-Anteil 0..1, gleitet in `BOOST_GLIDE_S` (Lehre 8). */
   level: number;
-  /** Lokaler Tag (vom Gerät geliefert) und Anzahl Boosts an diesem Tag. */
+}
+
+/** Werbe-Belohnungen mit Tageslimit (docs/03 §10). */
+export type RewardKind = 'boost' | 'offlineDouble';
+
+export interface RewardState {
+  /** Lokaler Tag (vom Gerät geliefert, z. B. Tage seit 1970 in Ortszeit). */
   day: number;
-  usedToday: number;
+  /** Nutzungen am Tag `day`. */
+  used: Partial<Record<RewardKind, number>>;
 }
 
 export interface OfflineResult {
@@ -81,6 +88,7 @@ export interface GameState {
   buyAmount: BuyAmount;
   eras: Partial<Record<EraId, EraState>>;
   boost: BoostState;
+  rewards: RewardState;
   lastOffline: OfflineResult | null;
 }
 
@@ -122,7 +130,8 @@ export function newGame(seed: number): GameState {
     activeEra: 'harbor',
     buyAmount: 1,
     eras: { harbor },
-    boost: { remaining: 0, level: 0, day: 0, usedToday: 0 },
+    boost: { remaining: 0, level: 0 },
+    rewards: { day: 0, used: {} },
     lastOffline: null,
   };
 }
@@ -169,6 +178,7 @@ export function cloneState(s: GameState): GameState {
     ...s,
     eras,
     boost: { ...s.boost },
+    rewards: { day: s.rewards.day, used: { ...s.rewards.used } },
     lastOffline: s.lastOffline ? { ...s.lastOffline, byEra: { ...s.lastOffline.byEra } } : null,
   };
 }
