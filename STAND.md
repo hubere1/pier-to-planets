@@ -8,7 +8,7 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 - **M1 Stilprobe + Geräte-Durchstich:** Look freigegeben (D-030), 60 fps auf Gerät belegt; nur Referenztafel offen.
 - **M2 Simulationskern + Ära 1:** abgeschlossen 05.10.2026. `npm run verify` lokal grün, Balancing-Gate grün
   (casual erreicht den Raumhafen-Anleger im Mittel an Tag 2,00 mit 1 Neustart, Werbung 16,9 % schneller).
-  CI-Lauf für den M2-Stand steht noch aus (noch nicht gepusht).
+  CI grün auf `65e1e33` (Run 37290328586).
 - Nächster Meilenstein: **M3 Ära 1 komplett spielbar** (UI, Takt, Autosave, Tutorial; `docs/07-milestones.md`).
 
 ## M2 – was fertig ist
