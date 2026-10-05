@@ -50,7 +50,9 @@ describe('formatNum (docs/06 §10, Lehre 12, D-033)', () => {
     expect(formatNum(Num.of('9.99e299'), 'en')).toBe(`999.0${NB}dj`);
     for (let e = 6; e <= 300; e++) {
       const s = formatNum(Num.of(`1.5e${e}`), 'en');
-      expect(s, `1.5e${e}`).toMatch(new RegExp(`^d{1,3}.d${NB}[A-Za-z]+.?$`));
+      const [value, suffix] = s.split(NB);
+      expect(value, s).toMatch(/^\d{1,3}\.\d$/);
+      expect(suffix, s).toMatch(/^[A-Za-z]+\.?$/);
     }
   });
 
