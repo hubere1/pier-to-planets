@@ -5,7 +5,7 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 
 ## Kurzfassung
 - **M0 Fundament:** abgeschlossen. **CI grün** auf Stand `e780c94` (Run 37281812046, inkl. Pixeltests per Software-WebGL).
-- **M1 Stilprobe + Geräte-Durchstich:** großteils umgesetzt, **Abnahme offen**.
+- **M1 Stilprobe + Geräte-Durchstich:** Look freigegeben (D-030), 60 fps auf Gerät belegt; nur Referenztafel offen.
   Die Hafenszene läuft im Browser und im Android-Emulator, mit Licht, Tag-Nacht-Wechsel, Wasser und Spiegelungen.
 - Nächster Meilenstein nach M1-Abnahme: **M2 Simulationskern** (TDD, `docs/07-milestones.md`).
 
@@ -27,12 +27,12 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 - Screenshots zur Abnahme: `docs/m1/` (Tag, goldene Stunde, Nacht, Emulator)
 
 ## M1 – was offen ist (in dieser Reihenfolge)
-1. **Owner-Freigabe des Looks** anhand `docs/m1/*.png` → Eintrag im Decision-Log.
-2. **Referenztafel** (Sea of Stars, Graveyard Keeper, Eastward) neben den Screenshots – `docs/m1/referenz.md`.
-3. **fps-Messung auf echtem Gerät** (Exit-Kriterium 60 fps / p95 ≤ 20 ms, Low-End 30 fps): Im Emulator nicht aussagekräftig.
-   **Vorher den Owner fragen** (D-027: Tests sonst nur im Emulator).
-4. Feinschliff: Sonnenschatten kaum sichtbar, Klippen-Textur, viel leerer Himmel (Komposition), Rauch ohne Ausblenden.
-5. Kein WebGL1-Fallback: Der Licht-Shader braucht WebGL2 (GLSL 300 es). Für sehr alte Geräte Stufe „Sparsam“ ohne
+Erledigt am 05.10.2026: **Owner-Freigabe des Looks** (D-030) und **fps-Messung auf Gerät** (Galaxy A51: 60 fps,
+p95 16,7 ms in allen Stufen, `docs/m1/messprotokoll.md`).
+1. **Referenztafel** (Sea of Stars, Graveyard Keeper, Eastward) neben den Screenshots – `docs/m1/referenz.md`.
+   Letzter Haken für M1.
+2. Feinschliff (kein Abnahme-Blocker): Sonnenschatten kaum sichtbar, Klippen-Textur, viel leerer Himmel (Komposition), Rauch ohne Ausblenden.
+3. Kein WebGL1-Fallback: Der Licht-Shader braucht WebGL2 (GLSL 300 es). Für sehr alte Geräte Stufe „Sparsam“ ohne
    eigenen Shader prüfen.
 
 ## Nützliche Befehle

@@ -22,10 +22,11 @@ Ziel: Look festlegen, bevor viel Grafik entsteht; Technik auf echtem Handy beleg
 - [x] Generator-Pipeline: Albedo/Normal/Emissive aus Geometrie, Palette Hafen (48), Atlas, Manifest.
 - [x] Licht-Pass (quantisiert + Dither), 8 Tageszeit-LUTs, Emissive-Nacht, Sonnen-Schatten, Bloom.
 - [x] Debug-Regler: Tageszeit, Qualitätsstufe, Licht an/aus.
-- [~] Capacitor-Android-Hülle, Debug-APK (läuft im Emulator, D-027; Messung auf Gerät offen); Frame-Timing über Chrome Remote Debugging.
+- [x] Capacitor-Android-Hülle, Debug-APK (Emulator D-027; Galaxy A51: 60 fps in allen Stufen, `docs/m1/messprotokoll.md`); Frame-Timing über Chrome Remote Debugging.
 - [ ] Referenztafel (Sea of Stars, Graveyard Keeper, Eastward) neben Screenshots der Probe.
 Exit: Owner-Freigabe des Looks; 60 fps (p95 ≤ 20 ms) auf Mittelklasse, ≥ 30 fps auf Low-End in Stufe „Sparsam“; Szene pixelgenau auf 3 Breiten.
 Nachweis: Screenshots Tag/Goldene Stunde/Nacht, Messprotokoll, Freigabe im Decision-Log.
+Stand 05.10.2026: Look freigegeben (D-030), Bildrate belegt (Messprotokoll). Offen nur noch die Referenztafel.
 
 ## M2 – Simulationskern + Ära 1 (TDD)
 Ziel: komplette Regeln aus `03` §1–4, §7 für den Hafen als reines TypeScript.
