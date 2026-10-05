@@ -235,3 +235,36 @@ export function runJourney(seed = 1, seconds = 600): JourneyResult {
   }
   return { firstPurchase, crane };
 }
+
+export interface Spread {
+  p50: number;
+  p90: number;
+  max: number;
+}
+
+export interface JourneyStats {
+  runs: number;
+  firstPurchase: Spread;
+  crane: Spread;
+}
+
+function spread(values: number[]): Spread {
+  const v = [...values].sort((a, b) => a - b);
+  const at = (p: number) => v[Math.min(v.length - 1, Math.floor(p * v.length))] ?? Infinity;
+  return { p50: at(0.5), p90: at(0.9), max: v[v.length - 1] ?? Infinity };
+}
+
+/**
+ * Einstieg über viele Installationen (D-040): Ankünfte sind Poisson-verteilt, ein einzelner
+ * Seed sagt wenig. Nicht erreicht zählt als unendlich.
+ */
+export function journeyStats(runs = 100, seconds = 300): JourneyStats {
+  const first: number[] = [];
+  const crane: number[] = [];
+  for (let i = 0; i < runs; i++) {
+    const r = runJourney(i * 7919 + 13, seconds);
+    first.push(r.firstPurchase ?? Infinity);
+    crane.push(r.crane ?? Infinity);
+  }
+  return { runs, firstPurchase: spread(first), crane: spread(crane) };
+}

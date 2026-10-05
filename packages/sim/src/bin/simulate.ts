@@ -6,7 +6,7 @@
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { POLICIES, POLICY, runJourney, type PolicyId } from '../balance/policies.ts';
+import { journeyStats, POLICIES, POLICY, type PolicyId } from '../balance/policies.ts';
 import {
   checkGate,
   GATE,
@@ -30,7 +30,7 @@ if (ids.length === 0) {
 const started = performance.now();
 const results = new Map<PolicyId, PolicySummary>();
 for (const id of ids) results.set(id, runVariants(id));
-const journey = runJourney();
+const journey = journeyStats(GATE.journeyRuns);
 const again = runVariants(ids[0]!);
 const deterministic = JSON.stringify(again) === JSON.stringify(results.get(ids[0]!));
 const gate = checkGate(results, journey, deterministic);
@@ -56,8 +56,9 @@ console.log(
 );
 console.log(table.join('\n'));
 console.log(
-  `\nEinstieg (diskret, 3 Tipps/s): erster Kauf ${journey.firstPurchase?.toFixed(1) ?? '–'} s, ` +
-    `Kran ${journey.crane?.toFixed(1) ?? '–'} s\n`,
+  `\nEinstieg (diskret, 3 Tipps/s, ${journey.runs} Installationen): erster Kauf im Median ` +
+    `${journey.firstPurchase.p50.toFixed(1)} s (längster ${journey.firstPurchase.max.toFixed(1)} s), ` +
+    `Kran ${journey.crane.p50.toFixed(1)} s\n`,
 );
 for (const c of gate) console.log(`${c.ok ? '✔' : '✖'} ${c.name}: ${c.detail}`);
 
@@ -85,8 +86,10 @@ function report(checks: GateCheck[]): string {
     '',
     ...table,
     '',
-    `Einstieg (diskret, 3 Tipps/s): erster Kauf nach **${journey.firstPurchase?.toFixed(1)} s**, ` +
-      `Kran nach **${journey.crane?.toFixed(1)} s**.`,
+    `Einstieg (diskret, 3 Tipps/s, ${journey.runs} Installationen mit verschiedenen Ankünften): ` +
+      `erster Kauf im Median nach **${journey.firstPurchase.p50.toFixed(1)} s**, längster ` +
+      `**${journey.firstPurchase.max.toFixed(1)} s**; Kran im Median nach ` +
+      `**${journey.crane.p50.toFixed(1)} s**.`,
     '',
     '## Prüfungen',
     '',

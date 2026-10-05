@@ -4,7 +4,7 @@
  * Jede Policy läuft in mehreren Varianten (Installationszeit, gestreute Sitzungen, D-035);
  * bewertet wird der Mittelwert, damit keine einzelne Schwelle vor der Nacht den Ausschlag gibt.
  */
-import { runPolicy, type JourneyResult, type PolicyId, type RunResult } from './policies.ts';
+import { runPolicy, type JourneyStats, type PolicyId, type RunResult } from './policies.ts';
 
 export const GATE = {
   maxDays: 12,
@@ -15,6 +15,8 @@ export const GATE = {
   adsMaxSpeedup: 0.25,
   firstPurchaseS: 60,
   craneS: 300,
+  /** Einstieg über so viele Installationen (Ankünfte zufällig, D-040). */
+  journeyRuns: 100,
 } as const;
 
 export interface PolicySummary {
@@ -51,7 +53,7 @@ const day = (d: number | null) => (d === null ? 'nicht erreicht' : `Tag ${d.toFi
 
 export function checkGate(
   results: ReadonlyMap<PolicyId, PolicySummary>,
-  journey: JourneyResult,
+  journey: JourneyStats,
   deterministic: boolean,
 ): GateCheck[] {
   const checks: GateCheck[] = [];
@@ -99,15 +101,18 @@ export function checkGate(
       detail: problems.length === 0 ? 'jeder Tag mit Fortschritt' : problems.join('; '),
     });
   }
+  const spread = (x: { p50: number; p90: number; max: number }) =>
+    `Median ${x.p50.toFixed(1)} s, p90 ${x.p90.toFixed(1)} s, längster ${x.max.toFixed(1)} s ` +
+    `(${journey.runs} Installationen)`;
   checks.push({
     name: 'erster Kauf ≤ 60 s (FR-K02)',
-    ok: journey.firstPurchase !== null && journey.firstPurchase <= GATE.firstPurchaseS,
-    detail: `${journey.firstPurchase?.toFixed(1) ?? '–'} s`,
+    ok: journey.firstPurchase.max <= GATE.firstPurchaseS,
+    detail: spread(journey.firstPurchase),
   });
   checks.push({
     name: 'Kran ≤ 5 Min (M3-Exit)',
-    ok: journey.crane !== null && journey.crane <= GATE.craneS,
-    detail: `${journey.crane?.toFixed(1) ?? '–'} s`,
+    ok: journey.crane.max <= GATE.craneS,
+    detail: spread(journey.crane),
   });
   checks.push({
     name: 'Determinismus (NFR-Q07)',

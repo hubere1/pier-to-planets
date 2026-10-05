@@ -32,6 +32,12 @@ export function previousMilestone(level: number): number {
   return prev;
 }
 
+/**
+ * Das erste Boot (Spielstart, Neustart) bringt die 3-fache Ladung (D-040): Ankünfte sind
+ * Poisson-verteilt (Ø 20 s Abstand), ohne Vorrat käme der erste Kauf bei Pech erst nach Minuten.
+ */
+export const FIRST_BOAT_LOAD = 3;
+
 /** Tippen: 5 % der Ladung, mindestens 1 Ware (§2, A). */
 export const TAP_SHARE = 0.05;
 export const TAP_MIN = 1;

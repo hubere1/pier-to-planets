@@ -13,7 +13,7 @@ Nicht von Hand bearbeiten. Zeiten in Tagen ab der ersten Sitzung; je Policy
 | idle | 2 | Tag 4.00 | 3.95–4.03 | 1.00 | 16–16 |
 | ads | 4 | Tag 1.66 | 1.35–1.85 | 1.88 | 10–68 |
 
-Einstieg (diskret, 3 Tipps/s): erster Kauf nach **43.8 s**, Kran nach **43.8 s**.
+Einstieg (diskret, 3 Tipps/s, 100 Installationen mit verschiedenen Ankünften): erster Kauf im Median nach **43.8 s**, längster **43.8 s**; Kran im Median nach **43.8 s**.
 
 ## Prüfungen
 
@@ -28,8 +28,8 @@ Einstieg (diskret, 3 Tipps/s): erster Kauf nach **43.8 s**, Kran nach **43.8 s**
 - ✔ **idle ohne Sackgasse:** jeder Tag mit Fortschritt
 - ✔ **ads erreicht das Ziel:** 8/8 Läufe, im Mittel Tag 1.66
 - ✔ **ads ohne Sackgasse:** jeder Tag mit Fortschritt
-- ✔ **erster Kauf ≤ 60 s (FR-K02):** 43.8 s
-- ✔ **Kran ≤ 5 Min (M3-Exit):** 43.8 s
+- ✔ **erster Kauf ≤ 60 s (FR-K02):** Median 43.8 s, p90 43.8 s, längster 43.8 s (100 Installationen)
+- ✔ **Kran ≤ 5 Min (M3-Exit):** Median 43.8 s, p90 43.8 s, längster 43.8 s (100 Installationen)
 - ✔ **Determinismus (NFR-Q07):** zwei Läufe identisch
 
 ## Annahmen dieses Laufs

@@ -4,7 +4,7 @@
  */
 import { ERAS, type EraDef, type EraId } from '@ptp/content';
 import { Num } from '../num/index.ts';
-import { APPROACH_S } from '../rules.ts';
+import { APPROACH_S, FIRST_BOAT_LOAD } from '../rules.ts';
 import { Rng, seedRng } from '../rng/index.ts';
 
 export type BuyAmount = 1 | 10 | 'max';
@@ -138,11 +138,12 @@ export function newGame(seed: number): GameState {
 
 /** Das erste Boot ist fast da, damit der erste Tipp in Sekunden möglich ist (FR-K02). */
 export function firstBoat(def: EraDef, id: number): Vehicle {
+  const load = def.loadBase * FIRST_BOAT_LOAD;
   return {
     id,
     tier: 0,
-    load: def.loadBase,
-    cargo: def.loadBase,
+    load,
+    cargo: load,
     phase: 'approach',
     t: APPROACH_S - 2,
     bonusTaps: 0,

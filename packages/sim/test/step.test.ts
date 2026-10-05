@@ -6,7 +6,7 @@ import type { Command, Notice } from '../src/engine/types.ts';
 import { eraFlow } from '../src/econ/flow.ts';
 import { costFor } from '../src/econ/cost.ts';
 import { harbor } from '@ptp/content';
-import { DT, REWARD_LIMITS } from '../src/rules.ts';
+import { DT, FIRST_BOAT_LOAD, REWARD_LIMITS } from '../src/rules.ts';
 
 const active = { dt: DT, mode: 'active' as const };
 
@@ -73,8 +73,10 @@ describe('Schleife und Tippen (FR-K01, FR-K02, FR-K03)', () => {
       mode: 'active',
     });
     s = r.state;
-    expect(harborOf(s).vehicles[0]!.cargo).toBe(19);
-    expect(harborOf(s).stock).toBe(1);
+    // Erstes Boot: 3-fache Ladung (D-040) = 60 Waren, 5 % = 3 Waren je Tipp.
+    expect(v.load).toBe(harbor.loadBase * FIRST_BOAT_LOAD);
+    expect(harborOf(s).vehicles[0]!.cargo).toBe(v.load - 0.05 * v.load);
+    expect(harborOf(s).stock).toBe(0.05 * v.load);
     expect(refs(r.notices)).toEqual(['tap.unloaded']);
   });
 
@@ -116,7 +118,7 @@ describe('Schleife und Tippen (FR-K01, FR-K02, FR-K03)', () => {
     const r = step(s, taps, { dt: 0, mode: 'active' });
     expect(refs(r.notices).filter((x) => x === 'tap.bonus')).toHaveLength(10);
     expect(refs(r.notices).filter((x) => x === 'tap.denied')).toHaveLength(2);
-    expect(harborOf(r.state).money.toNumber() - moneyBefore).toBeCloseTo(10 * 0.01 * 20, 9);
+    expect(harborOf(r.state).money.toNumber() - moneyBefore).toBeCloseTo(10 * 0.01 * v.load, 9);
     const later = run(r.state, 30);
     expect(harborOf(later).served).toBeGreaterThanOrEqual(1);
   });
@@ -124,7 +126,7 @@ describe('Schleife und Tippen (FR-K01, FR-K02, FR-K03)', () => {
   it('A11y-Knopf „Entladen“ wirkt wie ein Tipp auf das erste liegende Fahrzeug', () => {
     const s = run(newGame(1), 2.5);
     const r = step(s, [{ type: 'unload', era: 'harbor' }], { dt: 0, mode: 'active' });
-    expect(harborOf(r.state).stock).toBe(1);
+    expect(harborOf(r.state).stock).toBe(0.05 * harborOf(s).vehicles[0]!.load);
     const none = step(newGame(1), [{ type: 'unload', era: 'harbor' }], { dt: 0, mode: 'active' });
     expect(none.notices[0]).toEqual({
       ref: 'tap.denied',

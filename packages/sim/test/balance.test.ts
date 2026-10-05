@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bestPurchase, runJourney, runPolicy } from '../src/balance/policies.ts';
+import { bestPurchase, journeyStats, runJourney, runPolicy } from '../src/balance/policies.ts';
 import { bottleneck } from '../src/econ/bottleneck.ts';
 import { newGame, step, DT } from '../src/index.ts';
 
@@ -24,6 +24,13 @@ describe('Balancing-Policies (docs/03 §9)', () => {
     expect(j.firstPurchase).not.toBeNull();
     expect(j.firstPurchase!).toBeLessThanOrEqual(60);
     expect(j.crane!).toBeLessThanOrEqual(300);
+  });
+
+  it('Einstieg über 100 Installationen: auch bei Pech mit den Ankünften erster Kauf ≤ 60 s (D-040)', () => {
+    const j = journeyStats(100, 300);
+    expect(j.firstPurchase.p90).toBeLessThanOrEqual(60);
+    expect(j.firstPurchase.max).toBeLessThanOrEqual(60);
+    expect(j.crane.max).toBeLessThanOrEqual(300);
   });
 });
 
