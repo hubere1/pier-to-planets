@@ -2,7 +2,7 @@
  * Abgeleitete Views – Single Source für die UI (docs/04 § Views, Lehre 5).
  * Die UI rechnet nichts nach; Kosten, Gründe und Vorschauen kommen von hier.
  */
-import type { EraId } from '@ptp/content';
+import type { EffectKind, EraId } from '@ptp/content';
 import { Num } from '../num/index.ts';
 import {
   eraDef,
@@ -13,13 +13,14 @@ import {
   type VehiclePhase,
 } from '../model/state.ts';
 import { costFor as costForLevels, maxAffordable } from '../econ/cost.ts';
-import { contribution, eraFlow } from '../econ/flow.ts';
+import { contribution, eraFlow, stageRates } from '../econ/flow.ts';
 import {
   APPROACH_S,
   LEAVE_S,
   milestonesReached,
   nextMilestone,
   previousMilestone,
+  STOCK_BUFFER_S,
 } from '../rules.ts';
 
 export { bottleneck } from '../econ/bottleneck.ts';
@@ -76,6 +77,9 @@ export interface BuildingCard {
   milestone: { reached: number; from: number; next: number; progress: number };
   /** Aktuelle Wirkung auf der eigenen Stufe der Kette (Rohwert ohne Mult). */
   effect: number;
+  /** Wirkung nach dem Kauf von `amount` Stufen (docs/05 § Bauen: „jetzt → nach Kauf“). */
+  effectAfter: number;
+  effectKind: EffectKind;
 }
 
 export function buildingCard(
@@ -113,6 +117,8 @@ export function buildingCard(
       progress: (level - from) / (next - from),
     },
     effect: contribution(b, level),
+    effectAfter: contribution(b, level + amount),
+    effectKind: b.effect,
   };
 }
 
@@ -155,8 +161,10 @@ export interface SceneView {
   buildings: Record<string, { level: number; stage: number; unlocked: boolean }>;
   goal: { unlocked: boolean; built: boolean };
   vehicles: SceneVehicle[];
-  /** Lagerfüllung in Waren (für Kisten-Stapel). */
+  /** Lagerfüllung in Waren. */
   stock: number;
+  /** Lagerfüllung 0..1 bezogen auf den Puffer (für den Kistenstapel). */
+  stockFill: number;
 }
 
 export function sceneView(s: GameState, era: EraId): SceneView {
@@ -188,5 +196,11 @@ export function sceneView(s: GameState, era: EraId): SceneView {
       turnedAway: v.turnedAway,
     })),
     stock: e.stock,
+    stockFill: stockFill(e.stock, stageRates(def, e.levels).V),
   };
+}
+
+function stockFill(stock: number, V: number): number {
+  const cap = V * STOCK_BUFFER_S;
+  return cap > 0 ? Math.min(1, stock / cap) : 0;
 }

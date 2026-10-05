@@ -286,6 +286,14 @@ function buy(
   for (let m = before + 1; m <= after; m++) {
     notices.push({ ref: 'milestone.reached', args: { era, building: id, milestone: m } });
   }
+  const def = eraDef(era);
+  if (id === def.tierBuilding) {
+    for (const v of def.vehicles) {
+      if (v.fromLevel > level && v.fromLevel <= newLevel) {
+        notices.push({ ref: 'vehicle.newTier', args: { era, vehicle: v.id } });
+      }
+    }
+  }
 }
 
 function buildGoal(s: GameState, era: EraId, notices: Notice[]): void {

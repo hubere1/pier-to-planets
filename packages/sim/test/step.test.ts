@@ -179,6 +179,19 @@ describe('Kaufen (FR-K04, FR-K07)', () => {
     expect(h.money.lt(costFor(harbor.buildings[0]!, h.levels.pier!, 1))).toBe(true);
   });
 
+  it('meldet eine neue Fahrzeugstufe, wenn die Werft sie freischaltet (Feier „Neues Fahrzeug“)', () => {
+    const s = withLevels({ shipyard: 4 });
+    s.eras.harbor!.money = Num.of(1e9);
+    const r = step(s, [{ type: 'buy', era: 'harbor', building: 'shipyard', amount: 10 }], {
+      dt: 0,
+      mode: 'active',
+    });
+    const tiers = r.notices
+      .filter((n) => n.ref === 'vehicle.newTier')
+      .map((n) => n.args['vehicle']);
+    expect(tiers).toEqual(['cutter', 'freighter']);
+  });
+
   it('schaltet Gebäude über Lebenseinnahmen frei und meldet es', () => {
     const s = withLevels({ pier: 10, crane: 10, warehouse: 10 });
     harborOf(s).unlocked = ['pier', 'crane', 'warehouse'];

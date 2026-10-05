@@ -69,6 +69,19 @@ describe('Views (docs/04 § Views, Lehre 4 + 5)', () => {
     });
   });
 
+  it('buildingCard zeigt Wirkung jetzt → nach Kauf aus der Sim (Lehre 5)', () => {
+    const s = newGame(1);
+    s.eras.harbor!.levels.crane = 9;
+    const crane = buildingCard(s, 'harbor', 'crane', 1);
+    expect(crane.effectKind).toBe('goods');
+    expect(crane.effect).toBeCloseTo(9 * 12, 9);
+    // Stufe 10 ist ein Meilenstein: Wirkung ×2
+    expect(crane.effectAfter).toBeCloseTo(10 * 12 * 2, 9);
+    const yard = buildingCard(s, 'harbor', 'shipyard', 10);
+    expect(yard.effectKind).toBe('loadPct');
+    expect(yard.effectAfter).toBeGreaterThan(yard.effect);
+  });
+
   it('goalProgress und sceneView', () => {
     const s = newGame(1);
     s.eras.harbor!.money = Num.of(harbor.goal.cost / 4);
@@ -80,5 +93,16 @@ describe('Views (docs/04 § Views, Lehre 4 + 5)', () => {
     expect(scene.buildings.warehouse).toEqual({ level: 26, stage: 2, unlocked: true });
     expect(scene.vehicles[0]).toMatchObject({ tier: 'fishingBoat', phase: 'approach' });
     expect(scene.vehicles[0]!.progress).toBeCloseTo(4 / 6, 9);
+    expect(scene.stockFill).toBe(0);
+  });
+
+  it('sceneView.stockFill: Lagerfüllung 0..1 für den Kistenstapel', () => {
+    const s = newGame(1);
+    const e = s.eras.harbor!;
+    // V = 1,2 Waren/s (Lagerhalle 1) → Puffer 20 s = 24 Waren
+    e.stock = 12;
+    expect(sceneView(s, 'harbor').stockFill).toBeCloseTo(0.5, 9);
+    e.stock = 100;
+    expect(sceneView(s, 'harbor').stockFill).toBe(1);
   });
 });
