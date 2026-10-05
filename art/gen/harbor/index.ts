@@ -92,8 +92,11 @@ function pier(): SpriteDef {
 }
 
 // ── Kaimauer ────────────────────────────────────────────────────────────────
+// Breiter als die Bühne: Reserve für den Kamera-Schwenk (D-029); Muster bleibt an X = 44 verankert.
+const QUAY_PAD = 44;
+
 function quay(): SpriteDef {
-  const W = 206;
+  const W = 206 + QUAY_PAD;
   const H = 46;
   const r = mk(W, H);
   r.noiseRect(0, 0, W, 7, ['stone.2', 'stone.3', 'stone.2', 'stone.1', 'sand.1'], 21, N.up);
@@ -101,8 +104,9 @@ function quay(): SpriteDef {
   for (let y = 8; y < H; y++) {
     const course = Math.floor((y - 8) / 6);
     for (let x = 0; x < W; x++) {
-      const mortar = (y - 8) % 6 === 5 || (x + (course % 2) * 7) % 14 === 0;
-      const v = hash(Math.floor((x + (course % 2) * 7) / 14), course, 5);
+      const qx = x - QUAY_PAD;
+      const mortar = (y - 8) % 6 === 5 || (qx + (course % 2) * 7) % 14 === 0;
+      const v = hash(Math.floor((qx + (course % 2) * 7) / 14), course, 5);
       const block: ColorRef = v < 0.3 ? 'stone.1' : v < 0.8 ? 'stone.2' : 'stone.3';
       r.set(x, y, mortar ? 'stone.0' : block);
     }
@@ -115,7 +119,7 @@ function quay(): SpriteDef {
     }
   }
   // Festmacher-Ringe
-  for (const rx of [40, 120, 186]) {
+  for (const rx of [40 + QUAY_PAD, 120 + QUAY_PAD, 186 + QUAY_PAD]) {
     r.set(rx, 16, 'brass.1');
     r.set(rx - 1, 17, 'brass.0');
     r.set(rx + 1, 17, 'brass.0');
@@ -405,18 +409,22 @@ function cliff(): SpriteDef {
 }
 
 // ── Ferne: Hügel, Stadt, Wolken ─────────────────────────────────────────────
+// 40 px Reserve je Seite für den Kamera-Schwenk (D-029); Verlauf bleibt an X = 40 verankert.
+const HILLS_PAD = 40;
+
 function hills(): SpriteDef {
-  const W = 360;
+  const W = 360 + 2 * HILLS_PAD;
   const H = 64;
   const r = mk(W, H);
   for (let x = 0; x < W; x++) {
-    const back = 22 + Math.round(10 * Math.sin(x / 41) + 6 * Math.sin(x / 17 + 1.3));
-    const front = 40 + Math.round(6 * Math.sin(x / 29 + 2) + 3 * Math.sin(x / 11));
+    const hx = x - HILLS_PAD;
+    const back = 22 + Math.round(10 * Math.sin(hx / 41) + 6 * Math.sin(hx / 17 + 1.3));
+    const front = 40 + Math.round(6 * Math.sin(hx / 29 + 2) + 3 * Math.sin(hx / 11));
     for (let y = back; y < H; y++)
       r.set(x, y, y === back ? 'haze.2' : 'haze.1', y === back ? N.up : N.flat);
     for (let y = front; y < H; y++) r.set(x, y, y === front ? 'haze.1' : 'haze.0');
-    if (hash(x, 0, 12) < 0.18) {
-      const th = 3 + Math.floor(hash(x, 1, 12) * 4);
+    if (hash(hx, 0, 12) < 0.18) {
+      const th = 3 + Math.floor(hash(hx, 1, 12) * 4);
       for (let k = 0; k < th; k++) {
         const half = Math.floor(k / 2);
         for (let dx = -half; dx <= half; dx++) r.set(x + dx, front - th + k, 'sea.3');
