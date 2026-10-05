@@ -6,8 +6,28 @@ wo die Arbeit steht. Bei jedem Sitzungsende aktualisieren.
 ## Kurzfassung
 - **M0 Fundament:** abgeschlossen. **CI grün** auf Stand `e780c94` (Run 37281812046, inkl. Pixeltests per Software-WebGL).
 - **M1 Stilprobe + Geräte-Durchstich:** Look freigegeben (D-030), 60 fps auf Gerät belegt; nur Referenztafel offen.
-  Die Hafenszene läuft im Browser und im Android-Emulator, mit Licht, Tag-Nacht-Wechsel, Wasser und Spiegelungen.
-- Nächster Meilenstein nach M1-Abnahme: **M2 Simulationskern** (TDD, `docs/07-milestones.md`).
+- **M2 Simulationskern + Ära 1:** abgeschlossen 05.10.2026. `npm run verify` lokal grün, Balancing-Gate grün
+  (casual erreicht den Raumhafen-Anleger im Mittel an Tag 2,00 mit 1 Neustart, Werbung 16,9 % schneller).
+  CI-Lauf für den M2-Stand steht noch aus (noch nicht gepusht).
+- Nächster Meilenstein: **M3 Ära 1 komplett spielbar** (UI, Takt, Autosave, Tutorial; `docs/07-milestones.md`).
+
+## M2 – was fertig ist
+- `packages/sim/src`: `num/` (Num über break_infinity 2.2.0), `rng/` (mulberry32, Zustand im Save), `model/state.ts`,
+  `engine/step.ts` (Commands, Notices, diskrete Fahrzeuge, Erwartungswert-Modus), `econ/` (Fluss/Engpass, Kosten),
+  `prestige/stars.ts`, `offline/offline.ts`, `save/` (Schema 1, SHA-256, `chooseSave` save.json → save.bak, Migrationen),
+  `views/` (hud, buildingCard, costFor, bottleneck, prestigePreview, offlinePreview, goalProgress, sceneView)
+- Inhalte `packages/content/src/eras/harbor.ts` (Zahlen D-036), Zahlenformat `app/src/l10n/format.ts` (D-033)
+- Balancing: `src/balance/policies.ts` + `gate.ts`, CLI `npm run simulate -w packages/sim -- --policy all [--report]`,
+  Report `docs/balance-report.md`. Entscheidungen D-031 bis D-036.
+- Playwright lokal auf 3 Worker begrenzt: mit 12 parallelen Software-WebGL-Seiten liefen die Kameratests in den Timeout.
+
+## Für M3 wichtig
+- Die App nutzt die Sim noch nicht: Takt (10 Hz, `DT`), Interpolation, `SaveStore` (Datei + `chooseSave`),
+  Lifecycle (< 60 s nahtlos nachholen, sonst `offline()` + Rückkehr-Dialog mit `claimOffline`), Notices → l10n.
+- Commands mit Tageslimit (`applyReward`, `claimOffline`) brauchen den lokalen Tag vom Gerät (`platform/clock`).
+- `sceneView()` liefert Ausbaustufe = erreichte Meilensteine; der Renderer kennt bisher nur Lagerhalle 0–2.
+- Erster Kauf ist laut Engpass-Vorschlag der Kran (nach ~44 s bei 3 Tipps/s); das Tutorial (§8) nennt zuerst den Steg –
+  beim Bau des Tutorials entscheiden, ob der Coach dem Engpass folgt.
 
 ## M1 – was fertig ist
 - Grafik-Pipeline: `npm run art` (= `tools/gen-luts.ts` + `tools/build-atlas.ts`)

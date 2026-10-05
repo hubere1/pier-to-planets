@@ -30,13 +30,14 @@ Stand 05.10.2026: Look freigegeben (D-030), Bildrate belegt (Messprotokoll). Off
 
 ## M2 – Simulationskern + Ära 1 (TDD)
 Ziel: komplette Regeln aus `03` §1–4, §7 für den Hafen als reines TypeScript.
-- [ ] `Num`-Wrapper + Format-Tests (bis 1e300, DE/EN), `Rng`, `step()`, Commands, Notices.
-- [ ] Fluss/Engpass, Gebäude-Kosten und -Meilensteine, Kaufmenge, Fahrzeuge diskret (aktiv) + Erwartungswert (offline), Äquivalenztest.
-- [ ] Sterne-Prestige, Offline (4 h, 50 %), Save (Prüfsumme, Backup, Schema 1, Migrations-Gerüst).
-- [ ] `content/eras/harbor.ts` mit allen 8 Gebäuden, 4 Fahrzeugstufen, Ziel-Gebäude.
-- [ ] `bin/simulate.ts` mit Policies `casual|active|idle|ads`, Report `docs/balance-report.md`.
+- [x] `Num`-Wrapper + Format-Tests (bis 1e300, DE/EN; `app/src/l10n/format.ts`, D-033), `Rng`, `step()`, Commands, Notices.
+- [x] Fluss/Engpass, Gebäude-Kosten und -Meilensteine, Kaufmenge, Fahrzeuge diskret (aktiv) + Erwartungswert (offline), Äquivalenztest (D-032).
+- [x] Sterne-Prestige (D-031), Offline (4 h, 50 %), Save (Prüfsumme, Backup-Auswahl, Schema 1, Migrations-Gerüst, Fixture; Dateizugriff folgt in M3).
+- [x] `packages/content/src/eras/harbor.ts` mit allen 8 Gebäuden (7 + Ziel-Gebäude), 4 Fahrzeugstufen (D-036).
+- [x] `bin/simulate.ts` mit Policies `casual|active|idle|ads`, Report `docs/balance-report.md` (D-034, D-035).
 Exit: Pflichttests grün, Determinismus, Purity grün, Ära 1 erfüllt Zielkurve (`03` §9) ±30 %.
 Nachweis: Testausgabe, Balance-Report.
+**M2 abgeschlossen 05.10.2026:** casual erreicht das Ziel-Gebäude im Mittel an Tag 2,00 mit 1 Neustart, Werbung 16,9 % schneller, alle Policies ohne Sackgasse (`docs/balance-report.md`).
 
 ## M3 – Ära 1 komplett spielbar
 Ziel: Hafen von Start bis Ziel-Gebäude, mit Speichern, Offline und Sternen.

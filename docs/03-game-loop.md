@@ -30,8 +30,8 @@ Drei Stufen bilden eine Kette; die schwächste begrenzt den Fluss. Das macht „
 - **Fluss** `F = min(A, E, V)`; **Einnahmen/s** `= F · Preis · Mult`.
 - `Mult = (1 + 0,10 · Sterne) · Forschung · Personal · Lieferkette · Event · Werbe-Boost` (alle (A)); Boni addieren innerhalb ihrer Gruppe, Gruppen multiplizieren. Event und Werbe-Boost gleiten in 2 s ein und aus.
 - **Engpass** = `argmin(A, E, V)`; die Sim liefert `bottleneck()` mit Gebäude-ID und „+X %/s, wenn eine Stufe gekauft wird“ (Wirkungsvorschau aus der Sim).
-- **Aktive Darstellung:** Fahrzeuge sind diskrete Objekte (Ankunft per Poisson aus `Rng`, Ladung, Entladefortschritt). **Offline und Sim-Skript** nutzen dieselbe Rate `F` als Erwartungswert (§7). Test: Mittel über 1 h aktiv = Rate ±2 %.
-- **Tippen:** jeder Tipp auf ein liegendes Fahrzeug entlädt `tapAmount` (A: 5 % der Ladung, min. 1 Ware). Ab Kran Stufe 1 entlädt der Kran automatisch; Tippen gibt dann +1 % Bonus-Ertrag des Fahrzeugs (nie Pflicht). Alternative ohne Szene: Knopf „Entladen“ (A11y).
+- **Aktive Darstellung:** Fahrzeuge sind diskrete Objekte (Ankunft per Poisson aus `Rng`, Ladung, Entladefortschritt; 4 Liegeplätze + 4 Plätze auf Reede, höchstens 0,25 sichtbare Ankünfte/s, darüber wächst die Ladung – D-032). Die Fahrzeugstufe folgt der Werft-Stufe (Hafen: Kutter ab 5, Frachter ab 12, Containerschiff ab 20). **Offline und Sim-Skript** nutzen dieselbe Rate `F` als Erwartungswert (§7). Test: Mittel über 1 h aktiv = Rate ±2 %.
+- **Tippen:** jeder Tipp auf ein liegendes Fahrzeug entlädt `tapAmount` (A: 5 % der Ladung, min. 1 Ware). Ab Kran Stufe 1 entlädt der Kran automatisch; Tippen gibt dann +1 % Bonus-Ertrag des Fahrzeugs, höchstens 10 Tipps je Fahrzeug (D-032, nie Pflicht). Alternative ohne Szene: Knopf „Entladen“ (A11y).
 
 ## 3. Gebäude
 - Kosten Stufe n → n+1: `basis_g · wachstum_g^n`, `wachstum_g` ∈ [1,07; 1,15] (A), je Gebäude in `content`.
@@ -45,7 +45,7 @@ Drei Stufen bilden eine Kette; die schwächste begrenzt den Fluss. Das macht „
 - `SterneMöglich(Ära) = floor( 10 · (Lebenseinnahmen_Ära / Schwelle_Ära)^0,5 )` (A); beim Neustart erhält man `SterneMöglich − bereits erhaltene`.
 - Neustart setzt Geld, Gebäude und Fahrzeuge **dieser Ära** zurück; Sterne, Forschung, Personal, Kristalle, Erfolge bleiben.
 - Jeder Stern: +10 % Einnahmen in **allen** Ären (A), additiv.
-- Vorschau aus der Sim: „+N Sterne · +X % Einnahmen · nächster Durchlauf ca. Y-mal schneller“. Hinweis „Neustart lohnt sich“ erst ab `N ≥ max(1; 0,5 · Sterne)` (A), nie als Druck.
+- Vorschau aus der Sim: „+N Sterne · +X % Einnahmen · nächster Durchlauf ca. Y-mal schneller“. Hinweis „Neustart lohnt sich“ erst ab `N ≥ max(10; 0,5 · Sterne)` (A, D-031), nie als Druck.
 ### 4.2 Aufbruch in die nächste Ära
 - Jede Ära hat ein **Ziel-Gebäude** (Kosten in `content`, so gesetzt, dass die Neustarts aus §9 nötig sind). Fertig = nächste Ära frei, Feier-Moment, Kamera fliegt zur neuen Szene.
 - Wechsel zwischen Ären jederzeit über die Ären-Karte. **Jede Ära hat ihre eigene Währung** (Taler, Dollar, Credits, Mond-Credits, Mars-Rubel, Platin-Credits) (D-006).
@@ -75,7 +75,7 @@ Jede Ära: ~8 Gebäude, 3–4 Fahrzeugstufen, eigene Waren, eine eigene Mechanik
 
 ## 7. Offline
 - Rückkehr nach ≥ 60 s Abwesenheit: Ertrag = `F_alle Ären · Mult(ohne Event/Werbe-Boost) · Effizienz · min(Abwesenheit, Deckel)`.
-- Deckel 4 h → per Forschung 8/12/24 h; Effizienz 50 % → per Forschung 100 % (A). Uhr rückwärts = 0; Sprung > 30 Tage = Deckel.
+- Deckel 4 h → per Forschung 8/12/24 h; Effizienz 50 % → per Forschung 100 % (A). Uhr rückwärts = 0; Sprung > 30 Tage = Deckel. Unter 60 s holt die App die Zeit nahtlos mit aktiven Schritten nach. Der Werbe-Boost wirkt offline nicht und läuft offline auch nicht ab (D-032).
 - Offline-Ereignisse (Meilensteine durch Auto-Käufe gibt es nicht, aber Erfolge durch Abfertigungs-Zähler, Aufträge) gehen als Notices an den Rückkehr-Dialog und den Feed (Lehre 3).
 - Rückkehr-Dialog: Ertrag, Zeit, Deckel-Hinweis („Forschung verlängert auf 8 h“), optional „×2 per Werbung“ (§10).
 
@@ -102,13 +102,13 @@ Spieler-Policy `casual`: 4 Sessions/Tag à 3 Min, kauft immer den besten Engpass
 | 4 Mondbasis | 6 Tage | 4–5 | Tag 16 |
 | 5 Mars-Kolonie | 8 Tage | 5–6 | Tag 24 |
 | 6 Asteroidengürtel | endlos | beliebig | alle Erfolge Woche 4–6 |
-Weitere Policies: `active` (8 Sessions/Tag, tippt), `idle` (2 Sessions/Tag), `ads` (wie casual + alle Werbe-Boni). Abnahme: `casual` ±30 %, `idle` erreicht Ära 6 ≤ Tag 45, `ads` höchstens 25 % schneller als `casual`, keine Sackgasse (jede Policy schreitet in jeder 24-h-Spanne voran).
+Weitere Policies: `active` (8 Sessions/Tag, tippt), `idle` (2 Sessions/Tag), `ads` (wie casual + alle Werbe-Boni). Abnahme: `casual` ±30 %, `idle` erreicht Ära 6 ≤ Tag 45, `ads` höchstens 25 % schneller als `casual`, keine Sackgasse (jede Policy schreitet in jeder 24-h-Spanne voran). Gemessen wird der Mittelwert aus 8 Läufen je Policy mit unterschiedlicher Installationszeit und um ±45 Min gestreuten Sitzungen; casual kauft den Vorschlag aus `bottleneck()` (D-035).
 
 ## 10. Werbung (Monetarisierung, D-010)
 Nur **Rewarded Ads**, freiwillig, Kachel mit Aufschrift „Werbung“, nie Primärknopf, nie im Tutorial, nie vor einer Entscheidung.
 | Platzierung | Belohnung (A) | Limit |
 |---|---|---|
-| Rückkehr-Dialog | Offline-Ertrag ×2 | 1 je Rückkehr |
+| Rückkehr-Dialog | Offline-Ertrag ×2 | 1 je Rückkehr, höchstens 1/Tag (D-034) |
 | Boost-Kachel im HUD | Einnahmen ×2 für 30 Min, stapelt bis 4 h Restzeit | 6/Tag |
 | VIP-Event | Event-Belohnung ×3 | je Event |
 | Tägliche Aufträge | +1 zusätzlicher Austausch | 1/Tag |

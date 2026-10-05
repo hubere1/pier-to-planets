@@ -114,7 +114,7 @@ Recherche-Befund: Normal-Maps in voller Auflösung lassen Pixel-Art „glatt und
 
 ## 10. Zahlenformat
 - Unter 1 Mio.: voll mit Tausendertrenner („42.380 Taler“, EN „42,380 Thaler“).
-- Ab 1 Mio.: eine Nachkommastelle + Suffix. DE: Mio., Mrd., Bio., Brd., dann Kurzzeichen ab 1e15 wie im Genre üblich: Qa, Qi, Sx, Sp, Oc, No, Dc, danach aa, ab, … (in beiden Sprachen gleich ab 1e15). EN: K ab 1e4, M, B, T, Qa, Qi …
+- Ab 1 Mio.: eine Nachkommastelle + Suffix, immer abgerundet. DE: Mio., Mrd., Bio., EN: M, B, T; ab 1e15 in beiden Sprachen gleich: Qa, Qi, Sx, Sp, Oc, No, Dc, danach aa, ab, … zz (bis unter 1e2064), darüber wissenschaftlich (D-033).
 - Einstellung „Wissenschaftlich“: `4,2e45`.
 - Geschütztes Leerzeichen zwischen Zahl und Einheit; Rate mit „/s“ ohne Leerzeichen.
 - Alle Formate kommen aus `l10n/format.ts`, getestet bis 1e300 und für DE/EN.
